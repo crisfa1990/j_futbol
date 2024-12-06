@@ -89,11 +89,11 @@
 
 ## 3. Funcionalidades del Sistema
 
-### **Desarrollo de Jugadores Juveniles**
+### 3.1 **Desarrollo de Jugadores Juveniles**
   
 - **Descripción**: El sistema de desarrollo juvenil está diseñado para entrenar a jugadores menores de 20 años, quienes no pueden jugar en el primer equipo a menos que sean ascendidos. Los jugadores juveniles tienen un límite de edad entre los 16 y los 19 años, y no pueden tener habilidades superiores a 70 en ningún atributo. Cuando un jugador alcanza los 20 años, automáticamente se ascenderá al primer equipo. 
 
-#### **Cálculos y Reglas de Ascenso**:
+##### **Cálculos y Reglas de Ascenso**:
   - **Edad del Jugador**: Los jugadores de la liga juvenil deben tener entre 16 y 19 años, si superan los 19 años y 365 días, serán automáticamente ascendidos al primer equipo.
   - **Requisitos para Ascender**:
     - **Edad**: Al cumplir 20 años, el jugador se traslada automáticamente al primer equipo.
@@ -105,7 +105,39 @@
   - **Liga Juvenil**: Los jugadores juveniles juegan en esta liga y desarrollan sus habilidades. Si son buenos, pueden ser ascendidos al primer equipo.
   - **Ascenso Automático**: Cuando un jugador cumple 20 años, pasa al primer equipo automáticamente. La condición es que haya tenido un rendimiento adecuado en la liga juvenil.
 
-### **Cálculo del Sueldo de los Jugadores**
+- **Ascenso de Juveniles**: Cuando un jugador alcanza los 20 años o su habilidad media supera los 70, debe ser ascendido al primer equipo.
+  
+- **Condiciones de los Juveniles**:
+  - Edad entre **16 años** y **19 años 365 días**.
+  - Habilidad media máxima de **70**.
+  - Ninguna habilidad puede superar **70**.
+
+#### **Evolución de los Juveniles**:
+  - Los juveniles tendrán una evolución anual de sus habilidades, dependiendo de su entrenamiento y partidos jugados.
+  - Las habilidades no podrán superar 70 hasta ser ascendido al primer equipo.
+  - Los jugadores en la liga juvenil tendrán un sueldo menor en comparación con los jugadores del primer equipo.
+
+#### **Modelo de Liga Juvenil**:
+
+```python
+class Juvenil(models.Model):
+    jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE)
+    edad = models.IntegerField()
+    habilidad_media = models.IntegerField()
+    habilidades_maximas = models.JSONField()
+    en_primer_equipo = models.BooleanField(default=False)
+    
+    def actualizar_edad(self):
+        # Se actualiza la edad del jugador de acuerdo al año en curso
+        self.edad += 1
+    
+    def verificar_ascenso(self):
+        if self.edad >= 20 or self.habilidad_media > 70:
+            self.en_primer_equipo = True
+            self.save()
+```
+
+### 3.2 **Cálculo del Sueldo de los Jugadores**
   
 - **Descripción**: El sueldo de los jugadores se calcula en base a su rendimiento general, habilidades, moral y liderazgo. A medida que un jugador aumenta su rendimiento y habilidades, su sueldo incrementará.
 
@@ -122,7 +154,7 @@ Donde:
 - **Factor Moral**: Coeficiente para la moral (por ejemplo, 50).
 - **Factor Liderazgo**: Coeficiente para el liderazgo (por ejemplo, 200).
 
-### **Lesiones de Jugadores**
+### 3.3 **Lesiones de Jugadores**
 
 - **Descripción**: Los jugadores pueden lesionarse durante los entrenamientos o partidos, lo que afectará su rendimiento. Cada lesión tendrá una duración específica, y el jugador no podrá jugar hasta recuperarse completamente.
 
@@ -134,7 +166,34 @@ Donde:
 - Si el jugador se lesiona, se registra la fecha de inicio de la lesión y la duración.
 - Los jugadores lesionados no pueden participar en partidos hasta que se recuperen.
 
----
+## **Impacto de las Lesiones**:
+
+   Las lesiones afectarán temporalmente las habilidades de los jugadores. El jugador lesionado tendrá una penalización en sus habilidades de acuerdo con la gravedad de la lesión, que puede variar dependiendo del tipo de lesión. Ejemplo de cálculo:
+   ```python
+   Penalización Habilidad = Habilidad * (1 - % Lesión)
+
+```
+
+### **Modelo de Lesión**:
+
+```python
+class Lesion(models.Model):
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=100)  # Ejemplo: "Distensión muscular", "Rotura de ligamento"
+    gravedad = models.IntegerField()  # Escala del 1 al 10
+    duracion_dias = models.IntegerField()  # Duración estimada de la lesión
+    fecha_inicio = models.DateField(auto_now_add=True)
+
+    def aplicar_lesion(self):
+        # Reduce las habilidades en función de la gravedad
+        self.jugador.habilidad_media -= (self.gravedad * 2)
+        self.jugador.save()
+
+    def curar(self):
+        # Restaura las habilidades al nivel original
+        self.jugador.habilidad_media += (self.gravedad * 2)
+        self.jugador.save()
+```
 
 ### **Desarrollo y Planificación para el Juego**
 
@@ -146,9 +205,7 @@ Donde:
 
 - **Simulación de Competencias**: Las competiciones (copas nacionales e internacionales) deben reflejar la evolución de las habilidades de los jugadores, el rendimiento del equipo y las decisiones tácticas.
 
-# Planificación Detallada para el Sistema de Gestión de Club de Fútbol
-
-## 1. Simulación de Partidos y Resultados
+## 3.4 Simulación de Partidos y Resultados
 
 ### **Descripción del Sistema de Simulación de Partidos**:
 
@@ -182,85 +239,3 @@ La simulación de los partidos es una de las funcionalidades clave del sistema. 
      ```python
      Fuerza Lateral = Lateral * 0.5
      ```
-
-2. **Impacto de las Lesiones**:
-
-   Las lesiones afectarán temporalmente las habilidades de los jugadores. El jugador lesionado tendrá una penalización en sus habilidades de acuerdo con la gravedad de la lesión, que puede variar dependiendo del tipo de lesión. Ejemplo de cálculo:
-   ```python
-   Penalización Habilidad = Habilidad * (1 - % Lesión)
-
-   ## 5. Control de Eventos y Acciones en el Juego
-
-### **Descripción General**
-
-El sistema de control de eventos y acciones en el juego permite que los jugadores interactúen con diferentes situaciones que impactan directa o indirectamente el rendimiento del equipo. Estas acciones incluyen entrenamientos, lesiones, transferencias, moral, simulaciones de partidos y decisiones estratégicas en tiempo real.
-
-### **Eventos y Acciones**
-
-#### **Lesiones**
-
-Las lesiones son eventos que afectan a los jugadores, reduciendo temporalmente su rendimiento y, en algunos casos, imposibilitándolos de participar en partidos. Cada lesión tendrá atributos como tipo, gravedad y duración.
-
-##### **Modelo de Lesión**:
-
-```python
-class Lesion(models.Model):
-    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE)
-    tipo = models.CharField(max_length=100)  # Ejemplo: "Distensión muscular", "Rotura de ligamento"
-    gravedad = models.IntegerField()  # Escala del 1 al 10
-    duracion_dias = models.IntegerField()  # Duración estimada de la lesión
-    fecha_inicio = models.DateField(auto_now_add=True)
-
-    def aplicar_lesion(self):
-        # Reduce las habilidades en función de la gravedad
-        self.jugador.habilidad_media -= (self.gravedad * 2)
-        self.jugador.save()
-
-    def curar(self):
-        # Restaura las habilidades al nivel original
-        self.jugador.habilidad_media += (self.gravedad * 2)
-        self.jugador.save()
-```
-
-## 3. Desarrollo de Juveniles
-
-### **Descripción**:
-
-Se implementará un sistema de **Liga Juvenil** donde los jugadores menores de 20 años serán considerados juveniles. Los jugadores en la liga juvenil no podrán jugar en el primer equipo a menos que hayan sido ascendidos. Los jugadores juveniles tendrán un máximo de **70 de media** y **ninguna habilidad** puede superar **70**.
-
-### **Cálculos**:
-
-- **Ascenso de Juveniles**: Cuando un jugador alcanza los 20 años o su habilidad media supera los 70, debe ser ascendido al primer equipo.
-  
-- **Condiciones de los Juveniles**:
-  - Edad entre **16 años** y **19 años 365 días**.
-  - Habilidad media máxima de **70**.
-  - Ninguna habilidad puede superar **70**.
-
-### **Evolución de los Juveniles**:
-  - Los juveniles tendrán una evolución anual de sus habilidades, dependiendo de su entrenamiento y partidos jugados.
-  - Las habilidades no podrán superar 70 hasta ser ascendido al primer equipo.
-  - Los jugadores en la liga juvenil tendrán un sueldo menor en comparación con los jugadores del primer equipo.
-
-### **Modelo de Liga Juvenil**:
-
-```python
-class Juvenil(models.Model):
-    jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE)
-    edad = models.IntegerField()
-    habilidad_media = models.IntegerField()
-    habilidades_maximas = models.JSONField()
-    en_primer_equipo = models.BooleanField(default=False)
-    
-    def actualizar_edad(self):
-        # Se actualiza la edad del jugador de acuerdo al año en curso
-        self.edad += 1
-    
-    def verificar_ascenso(self):
-        if self.edad >= 20 or self.habilidad_media > 70:
-            self.en_primer_equipo = True
-            self.save()
-```
-
-
-  
