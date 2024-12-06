@@ -189,6 +189,39 @@ La simulación de los partidos es una de las funcionalidades clave del sistema. 
    ```python
    Penalización Habilidad = Habilidad * (1 - % Lesión)
 
+   ## 5. Control de Eventos y Acciones en el Juego
+
+### **Descripción General**
+
+El sistema de control de eventos y acciones en el juego permite que los jugadores interactúen con diferentes situaciones que impactan directa o indirectamente el rendimiento del equipo. Estas acciones incluyen entrenamientos, lesiones, transferencias, moral, simulaciones de partidos y decisiones estratégicas en tiempo real.
+
+### **Eventos y Acciones**
+
+#### **Lesiones**
+
+Las lesiones son eventos que afectan a los jugadores, reduciendo temporalmente su rendimiento y, en algunos casos, imposibilitándolos de participar en partidos. Cada lesión tendrá atributos como tipo, gravedad y duración.
+
+##### **Modelo de Lesión**:
+
+```python
+class Lesion(models.Model):
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=100)  # Ejemplo: "Distensión muscular", "Rotura de ligamento"
+    gravedad = models.IntegerField()  # Escala del 1 al 10
+    duracion_dias = models.IntegerField()  # Duración estimada de la lesión
+    fecha_inicio = models.DateField(auto_now_add=True)
+
+    def aplicar_lesion(self):
+        # Reduce las habilidades en función de la gravedad
+        self.jugador.habilidad_media -= (self.gravedad * 2)
+        self.jugador.save()
+
+    def curar(self):
+        # Restaura las habilidades al nivel original
+        self.jugador.habilidad_media += (self.gravedad * 2)
+        self.jugador.save()
+```
+
 ## 3. Desarrollo de Juveniles
 
 ### **Descripción**:
@@ -228,4 +261,6 @@ class Juvenil(models.Model):
             self.en_primer_equipo = True
             self.save()
 ```
+
+
   
