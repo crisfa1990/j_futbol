@@ -161,20 +161,77 @@ class Juvenil(models.Model):
 
 ### 3.2 **Cálculo del Sueldo de los Jugadores**
   
-- **Descripción**: El sueldo de los jugadores se calcula en base a su rendimiento general, habilidades, moral y liderazgo. A medida que un jugador aumenta su rendimiento y habilidades, su sueldo incrementará.
+### **Descripción General**
 
-#### **Cálculo**:
-- El sueldo se calcula de la siguiente forma:
-  - **Base**: Sueldo base según el club.
-  - **Habilidad Media**: Un porcentaje de su habilidad media influirá en el sueldo.
-  - **Moral**: La moral también afectará el sueldo (si la moral es baja, el sueldo será más bajo).
-  - **Liderazgo**: Un jugador con alto liderazgo recibirá un bono extra al sueldo.
-  
+El cálculo de sueldos de los jugadores se basa en rangos de habilidad promedio. Cada rango tiene un **coeficiente** que define cuánto incrementa el sueldo por cada punto dentro de ese rango. Esto permite reflejar el creciente valor de los jugadores más habilidosos.
 
-Donde:
-- **Factor Habilidad**: Coeficiente que multiplica la media de habilidades (por ejemplo, 100).
-- **Factor Moral**: Coeficiente para la moral (por ejemplo, 50).
-- **Factor Liderazgo**: Coeficiente para el liderazgo (por ejemplo, 200).
+---
+
+### **Rangos y Coeficientes**
+
+| **Rango de habilidad promedio** | **Coeficiente por punto** |
+|---------------------------------|---------------------------|
+| **0-59**                        | **1500**                 |
+| **60-69**                       | **3500**                 |
+| **70-79**                       | **5000**                 |
+| **80-89**                       | **7000**                 |
+| **90-100**                      | **10000**                |
+
+---
+
+### **Fórmula General**
+
+La fórmula acumula las contribuciones de cada rango alcanzado por el jugador:
+
+```python
+sueldo = sueldo_base + 
+         (puntos_rango1 * coeficiente_1) + 
+         (puntos_rango2 * coeficiente_2) + 
+         (puntos_rango3 * coeficiente_3) + 
+         (puntos_rango4 * coeficiente_4) + 
+         (puntos_rango5 * coeficiente_5)
+```
+
+### Función de cálculo en Python
+
+```python
+def calcular_sueldo(promedio, sueldo_base=50000):
+    # Coeficientes por rango
+    coeficientes = {
+        "rango1": 1500,  # 0-59
+        "rango2": 3500,  # 60-69
+        "rango3": 5000,  # 70-79
+        "rango4": 7000,  # 80-89
+        "rango5": 10000  # 90-100
+    }
+
+    # Inicialización del sueldo
+    sueldo = sueldo_base
+
+    # Cálculo por rangos
+    if promedio <= 59:
+        sueldo += promedio * coeficientes["rango1"]
+    elif promedio <= 69:
+        sueldo += (60 * coeficientes["rango1"]) + ((promedio - 60) * coeficientes["rango2"])
+    elif promedio <= 79:
+        sueldo += (60 * coeficientes["rango1"]) + (10 * coeficientes["rango2"]) + ((promedio - 70) * coeficientes["rango3"])
+    elif promedio <= 89:
+        sueldo += (60 * coeficientes["rango1"]) + (10 * coeficientes["rango2"]) + (10 * coeficientes["rango3"]) + ((promedio - 80) * coeficientes["rango4"])
+    else:
+        sueldo += (60 * coeficientes["rango1"]) + (10 * coeficientes["rango2"]) + (10 * coeficientes["rango3"]) + (10 * coeficientes["rango4"]) + ((promedio - 90) * coeficientes["rango5"])
+    
+    return sueldo
+```
+
+### Resumen de Sueldos
+
+| **Promedio** | **Sueldo Calculado** |
+|--------------|-----------------------|
+| **65**       | **157,500**          |
+| **75**       | **200,000**          |
+| **85**       | **265,000**          |
+| **95**       | **345,000**          |
+
 
 ### 3.3 **Lesiones de Jugadores**
 
@@ -187,6 +244,32 @@ Donde:
 ##### **Cálculo**:
 - Si el jugador se lesiona, se registra la fecha de inicio de la lesión y la duración.
 - Los jugadores lesionados no pueden participar en partidos hasta que se recuperen.
+
+```python
+sueldo_base = 50000
+coeficiente_1 = 1500
+coeficiente_2 = 3500
+coeficiente_3 = 5000
+coeficiente_4 = 7000
+coeficiente_5 = 10000
+
+sueldo = sueldo_base + 
+         (60 * coeficiente_1) + 
+         (10 * coeficiente_2) + 
+         (10 * coeficiente_3) + 
+         (10 * coeficiente_4) + 
+         (5 * coeficiente_5)
+
+sueldo = 50000 + 
+         (60 * 1500) + 
+         (10 * 3500) + 
+         (10 * 5000) + 
+         (10 * 7000) + 
+         (5 * 10000)
+
+sueldo = 50000 + 90000 + 35000 + 50000 + 70000 + 50000
+sueldo = 345000
+```
 
 #### **Impacto de las Lesiones**:
 
@@ -234,6 +317,7 @@ class Lesion(models.Model):
 La simulación de los partidos es una de las funcionalidades clave del sistema. El sistema de simulación determinará cómo interactúan las habilidades individuales de los jugadores durante los partidos y cómo afectan al rendimiento del equipo en cada competición. Para que esto sea realista y detallado, se tienen en cuenta las habilidades específicas de cada jugador (porteros, defensas, mediocampistas, delanteros, etc.), su moral, su estado físico (lesiones), y la estrategia del entrenador.
 
 ### **Cálculos Involucrados en la Simulación de Partidos**:
+
 
 1. **Fuerzas por posición**:
 
