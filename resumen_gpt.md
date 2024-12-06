@@ -1,5 +1,96 @@
 # Planificación Detallada del Juego de Gestión de Club de Fútbol
 
+## Índice
+
+1. [Modelos Actualizados](#1-modelos-actualizados)
+    - [Jugador](#jugador)
+    - [Lesión](#lesión)
+    - [Temporada](#temporada)
+    - [Copa Nacional](#copa-nacional)
+    - [Copa Internacional](#copa-internacional)
+    - [Selección Nacional](#selección-nacional)
+    - [Entrenador](#entrenador)
+    - [Liga Juvenil](#liga-juvenil)
+2. [Relaciones Entre Modelos](#2-relaciones-entre-modelos)
+3. [Funcionalidades del Sistema](#3-funcionalidades-del-sistema)
+    - [Desarrollo de Jugadores Juveniles](#31-desarrollo-de-jugadores-juveniles)
+    - [Cálculo del Sueldo de los Jugadores](#32-cálculo-del-sueldo-de-los-jugadores)
+    - [Lesiones de Jugadores](#33-lesiones-de-jugadores)
+    - [Simulación de Partidos y Resultados](#34-simulación-de-partidos-y-resultados)
+4. [Desarrollo y Planificación para el Juego](#4-desarrollo-y-planificación-para-el-juego)
+
+---
+
+## 1. Modelos Actualizados
+
+### **Jugador**
+- **Atributos**:
+  - `nombre`: (CharField) Nombre completo del jugador.
+  - `nacionalidad`: (ForeignKey) Relación con el modelo `Nacionalidad`, representa la nacionalidad del jugador.
+  - `habilidades`: (JSONField) Un diccionario con las habilidades clave del jugador, como `defensa`, `ataque`, `pases`, `remate`, etc.
+  - `goles_carrera`: (IntegerField) Goles marcados en su carrera profesional.
+  - `goles_temporada`: (IntegerField) Goles marcados en la temporada actual.
+  - `goles_club`: (IntegerField) Goles marcados con el club actual.
+  - `asistencias_carrera`: (IntegerField) Total de asistencias en su carrera profesional.
+  - `asistencias_temporada`: (IntegerField) Asistencias realizadas en la temporada actual.
+  - `asistencias_club`: (IntegerField) Asistencias realizadas en el club actual.
+  - `partidos_carrera`: (IntegerField) Número total de partidos jugados en su carrera.
+  - `partidos_temporada`: (IntegerField) Partidos jugados en la temporada actual.
+  - `partidos_club`: (IntegerField) Partidos jugados en el club actual.
+  - `lesionado`: (BooleanField) Indica si el jugador está lesionado.
+  - `lesion`: (ForeignKey) Relación con el modelo `Lesion` que describe los detalles de la lesión.
+  - `edad`: (IntegerField) Edad actual del jugador, calculada en función de su fecha de nacimiento.
+  - `moral`: (IntegerField) Nivel de moral del jugador (escala de 1 a 100).
+  - `sueldo`: (IntegerField) Sueldo del jugador calculado en base a su nivel de habilidades, moral y liderazgo.
+  - `liderazgo`: (IntegerField) Habilidad entrenable que refleja la capacidad del jugador para liderar, tanto en el campo como fuera de él (escala de 1 a 100).
+  - `media`: (FloatField) Media de las habilidades del jugador (promedio de todas las habilidades clave).
+  - `jugador_juvenil`: (BooleanField) Indica si el jugador es parte del equipo juvenil.
+  - `jugador_primer_equipo`: (BooleanField) Indica si el jugador ha sido ascendido o pertenece al primer equipo.
+
+### **Lesión**
+- **Atributos**:
+  - `tipo`: (CharField) Tipo de lesión sufrida (por ejemplo, "esguince", "fractura", "contractura").
+  - `tiempo_recuperacion`: (IntegerField) Duración de la recuperación en días.
+  - `fecha_inicio`: (DateField) Fecha en la que ocurrió la lesión.
+  - `fecha_fin`: (DateField) Fecha estimada en la que el jugador podrá regresar a la acción.
+
+---
+
+## 2. Relaciones Entre Modelos
+
+- **Jugador y Equipo**: Relación de muchos a muchos, un jugador puede pertenecer a varios equipos (por ejemplo, transferencias entre equipos, cesiones), pero cada equipo tiene varios jugadores.
+- **Jugador y Nacionalidad**: Relación de uno a muchos, un jugador tiene una nacionalidad, y una nacionalidad puede tener varios jugadores.
+- **Jugador y Lesión**: Relación de uno a muchos, cada jugador puede tener varias lesiones a lo largo de su carrera.
+- **Jugador y Moral, Sueldo, Liderazgo**: Los atributos de moral, sueldo y liderazgo están vinculados al rendimiento y comportamiento del jugador.
+- **Jugador y Liga Juvenil**: Relación de muchos a muchos. Los jugadores juveniles forman parte de la liga juvenil, pero solo pueden ascender al primer equipo cuando cumplen con ciertos requisitos, como tener una media de habilidades adecuada y un rendimiento sobresaliente.
+- **Equipo y Temporada**: Relación de uno a muchos, un equipo participa en una temporada específica, y cada temporada tiene varios equipos.
+
+---
+
+## 3. Funcionalidades del Sistema
+
+### 3.1 Desarrollo de Jugadores Juveniles
+
+- **Descripción**: El sistema de desarrollo juvenil está diseñado para entrenar a jugadores menores de 20 años...
+
+- **Cálculos y Reglas de Ascenso**:
+  - **Edad del Jugador**: Los jugadores deben tener entre 16 y 19 años...
+
+...
+
+---
+
+## 4. Desarrollo y Planificación para el Juego
+
+### **Base de Datos**
+Es fundamental contar con una base de datos bien estructurada...
+
+### **Optimización**
+Los cálculos en tiempo real serán importantes para...
+
+
+# Planificación Detallada del Juego de Gestión de Club de Fútbol
+
 ## 1. Modelos Actualizados
 
 ### **Jugador**
