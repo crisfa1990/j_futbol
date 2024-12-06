@@ -184,11 +184,11 @@ Donde:
 - Cada jugador tiene un campo de `lesionado`, que será `True` si está lesionado.
 - La lesión está vinculada a un modelo `Lesion`, que contiene información sobre el tipo de lesión y la duración de la recuperación.
 
-#### **Cálculo**:
+##### **Cálculo**:
 - Si el jugador se lesiona, se registra la fecha de inicio de la lesión y la duración.
 - Los jugadores lesionados no pueden participar en partidos hasta que se recuperen.
 
-## **Impacto de las Lesiones**:
+#### **Impacto de las Lesiones**:
 
    Las lesiones afectarán temporalmente las habilidades de los jugadores. El jugador lesionado tendrá una penalización en sus habilidades de acuerdo con la gravedad de la lesión, que puede variar dependiendo del tipo de lesión. Ejemplo de cálculo:
    ```python
@@ -196,7 +196,7 @@ Donde:
 
 ```
 
-### **Modelo de Lesión**:
+#### **Modelo de Lesión**:
 
 ```python
 class Lesion(models.Model):
