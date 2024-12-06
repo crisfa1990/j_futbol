@@ -171,11 +171,11 @@ El cálculo de sueldos de los jugadores se basa en rangos de habilidad promedio.
 
 | **Rango de habilidad promedio** | **Coeficiente por punto** |
 |---------------------------------|---------------------------|
-| **0-59**                        | **1500**                 |
-| **60-69**                       | **3500**                 |
-| **70-79**                       | **5000**                 |
-| **80-89**                       | **7000**                 |
-| **90-100**                      | **10000**                |
+| **0-59**                        | **1000**                 |
+| **60-69**                       | **12000**                |
+| **70-79**                       | **21000**                |
+| **80-89**                       | **42000**                |
+| **90-100**                      | **69000**                |
 
 ---
 
@@ -192,17 +192,17 @@ sueldo = sueldo_base +
          (puntos_rango5 * coeficiente_5)
 ```
 
-### Función de cálculo en Python
-
+Función de cálculo en Python
 ```python
+
 def calcular_sueldo(promedio, sueldo_base=50000):
     # Coeficientes por rango
     coeficientes = {
-        "rango1": 1500,  # 0-59
-        "rango2": 3500,  # 60-69
-        "rango3": 5000,  # 70-79
-        "rango4": 7000,  # 80-89
-        "rango5": 10000  # 90-100
+        "rango1": 1000,   # 0-59
+        "rango2": 12000,  # 60-69
+        "rango3": 21000,  # 70-79
+        "rango4": 42000,  # 80-89
+        "rango5": 69000   # 90-100
     }
 
     # Inicialización del sueldo
@@ -222,15 +222,15 @@ def calcular_sueldo(promedio, sueldo_base=50000):
     
     return sueldo
 ```
+## Cálculos Actualizados de Sueldos
 
-### Resumen de Sueldos
+| **Promedio** | **Rangos Alcanzados**              | **Sueldo Calculado** |
+|--------------|------------------------------------|-----------------------|
+| **65**       | Rango 1: 60 puntos<br>Rango 2: 5 puntos  | **630,000**          |
+| **75**       | Rango 1: 60 puntos<br>Rango 2: 10 puntos<br>Rango 3: 5 puntos | **1,440,000** |
+| **85**       | Rango 1: 60 puntos<br>Rango 2: 10 puntos<br>Rango 3: 10 puntos<br>Rango 4: 5 puntos | **3,480,000** |
+| **95**       | Rango 1: 60 puntos<br>Rango 2: 10 puntos<br>Rango 3: 10 puntos<br>Rango 4: 10 puntos<br>Rango 5: 5 puntos | **6,210,000** |
 
-| **Promedio** | **Sueldo Calculado** |
-|--------------|-----------------------|
-| **65**       | **157,500**          |
-| **75**       | **200,000**          |
-| **85**       | **265,000**          |
-| **95**       | **345,000**          |
 
 
 ### 3.3 **Lesiones de Jugadores**
@@ -244,32 +244,6 @@ def calcular_sueldo(promedio, sueldo_base=50000):
 ##### **Cálculo**:
 - Si el jugador se lesiona, se registra la fecha de inicio de la lesión y la duración.
 - Los jugadores lesionados no pueden participar en partidos hasta que se recuperen.
-
-```python
-sueldo_base = 50000
-coeficiente_1 = 1500
-coeficiente_2 = 3500
-coeficiente_3 = 5000
-coeficiente_4 = 7000
-coeficiente_5 = 10000
-
-sueldo = sueldo_base + 
-         (60 * coeficiente_1) + 
-         (10 * coeficiente_2) + 
-         (10 * coeficiente_3) + 
-         (10 * coeficiente_4) + 
-         (5 * coeficiente_5)
-
-sueldo = 50000 + 
-         (60 * 1500) + 
-         (10 * 3500) + 
-         (10 * 5000) + 
-         (10 * 7000) + 
-         (5 * 10000)
-
-sueldo = 50000 + 90000 + 35000 + 50000 + 70000 + 50000
-sueldo = 345000
-```
 
 #### **Impacto de las Lesiones**:
 
