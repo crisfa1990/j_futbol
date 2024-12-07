@@ -187,12 +187,12 @@ Esta metodología se adapta a:
 Los coeficientes se aplican según la suma total de habilidades del jugador, distribuidas en rangos predefinidos:     
 
 | **Suma de Habilidades** | **Coeficiente por punto** |
-|--------------------------|---------------------------|
-| **0-600**               | **1000**                 |
-| **601-1200**            | **12000**                |
-| **1201-1800**           | **21000**                |
-| **1801-2400**           | **42000**                |
-| **2401+**               | **69000**                |
+| ----------------------- | ------------------------- |
+| **0-600**               | **1000**                  |
+| **601-1200**            | **12000**                 |
+| **1201-1800**           | **21000**                 |
+| **1801-2400**           | **42000**                 |
+| **2401+**               | **69000**                 |
 
 
 #### Multiplicador de Portería
@@ -203,10 +203,10 @@ Las demás habilidades contribuyen de forma proporcional con los coeficientes ge
 
 
 | **Habilidad Portería** | **Impacto en el Sueldo** |
-|-------------------------|--------------------------|
-| **0-50**               | x1.5                    |
-| **51-80**              | x2.0                    |
-| **81+**                | x3.0                    |
+| ---------------------- | ------------------------ |
+| **0-50**               | x1.5                     |
+| **51-80**              | x2.0                     |
+| **81+**                | x3.0                     |
 
 #### Fórmula General para Porteros
 El sueldo de los porteros se calcula como la suma de:
@@ -285,7 +285,7 @@ def calcular_sueldo(habilidades, es_portero=False, sueldo_base=50000):
 ##### Habilidades de Jugador A
 
 | **Habilidad** | **Valor** |
-|---------------|-----------|
+| ------------- | --------- |
 | Remate        | 85        |
 | Desmarques    | 90        |
 | Defensa       | 70        |
@@ -304,7 +304,7 @@ sueldo = 615,000
 ##### Habilidades de Jugador B
 
 | **Habilidad** | **Valor** |
-|---------------|-----------|
+| ------------- | --------- |
 | Remate        | 20        |
 | Desmarques    | 25        |
 | Defensa       | 60        |
@@ -323,12 +323,12 @@ sueldo = 605,000
 
 #### Cálculos de Sueldos Detallados
 
-| **Jugador** | **Suma de Habilidades** | **Rangos Alcanzados**               | **Sueldo Calculado** |
-|-------------|--------------------------|-------------------------------------|-----------------------|
-| **A**       | 565                      | Rango 1: 565 puntos                | **615,000**          |
-| **B**       | 625                      | Rango 1: 600 puntos<br>Rango 2: 25 puntos | **680,000**   |
-| **C**       | 597                      | Rango 1: 597 puntos                | **597,000**          |
-| **D**       | 300 (otras habilidades)<br>85 (portero) | Rango 1: 300 puntos<br>Portería: 85 x 3.0 | **605,000** |
+| **Jugador** | **Suma de Habilidades**                 | **Rangos Alcanzados**                     | **Sueldo Calculado** |
+| ----------- | --------------------------------------- | ----------------------------------------- | -------------------- |
+| **A**       | 565                                     | Rango 1: 565 puntos                       | **615,000**          |
+| **B**       | 625                                     | Rango 1: 600 puntos<br>Rango 2: 25 puntos | **680,000**          |
+| **C**       | 597                                     | Rango 1: 597 puntos                       | **597,000**          |
+| **D**       | 300 (otras habilidades)<br>85 (portero) | Rango 1: 300 puntos<br>Portería: 85 x 3.0 | **605,000**          |
 
 
 
