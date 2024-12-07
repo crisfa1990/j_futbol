@@ -319,3 +319,80 @@ La simulación de los partidos es una de las funcionalidades clave del sistema. 
      ```python
      Fuerza Lateral = Lateral * 0.5
      ```
+
+
+## Propuesta de Cálculo de Sueldo Basado en Habilidades Totales
+### Descripción General
+El cálculo del sueldo de los jugadores considera la suma total de sus habilidades, donde cada habilidad aporta directamente al salario del jugador. Esta metodología permite premiar jugadores completos y reflejar mejor el valor que aportan al equipo.
+
+Además, los porteros tendrán un cálculo ajustado que otorga mayor peso a la habilidad de portería, ya que su especialización es crucial para el rendimiento del equipo y no es comparable con otras posiciones.
+
+### Rangos y Coeficientes Generales
+Los coeficientes se aplican según la suma total de habilidades del jugador, distribuidas en rangos predefinidos:     
+
+| **Suma de Habilidades** | **Coeficiente por punto** |
+|--------------------------|---------------------------|
+| **0-600**               | **1000**                 |
+| **601-1200**            | **12000**                |
+| **1201-1800**           | **21000**                |
+| **1801-2400**           | **42000**                |
+| **2401+**               | **69000**                |
+
+
+## Multiplicador de Portería
+Para los porteros, la habilidad de portería tiene mayor peso en el cálculo del sueldo. En este caso:
+
+La habilidad de portería aporta directamente al sueldo con un multiplicador especial.
+Las demás habilidades contribuyen de forma proporcional con los coeficientes generales.
+
+
+| **Habilidad Portería** | **Impacto en el Sueldo** |
+|-------------------------|--------------------------|
+| **0-50**               | x1.5                    |
+| **51-80**              | x2.0                    |
+| **81+**                | x3.0                    |
+
+### Fórmula General para Porteros
+El sueldo de los porteros se calcula como la suma de:
+
+* **Contribución de portería: Habilidad de portería multiplicada por su multiplicador especial.**
+**Contribución de otras habilidades: Suma de las habilidades restantes evaluada por los coeficientes generales.**
+
+
+
+
+## Habilidades de Jugador A
+
+| **Habilidad** | **Valor** |
+|---------------|-----------|
+| Remate        | 85        |
+| Desmarques    | 90        |
+| Defensa       | 70        |
+| Mentalidad    | 75        |
+| Pases         | 88        |
+| Jugadas       | 82        |
+| Portería      | 10        |
+| Lateralidad   | 65        |
+
+## Habilidades de Jugador B
+
+| **Habilidad** | **Valor** |
+|---------------|-----------|
+| Remate        | 20        |
+| Desmarques    | 25        |
+| Defensa       | 60        |
+| Mentalidad    | 70        |
+| Pases         | 55        |
+| Jugadas       | 40        |
+| Portería      | 85        |
+| Lateralidad   | 30        |
+
+## Cálculos de Sueldos Detallados
+
+| **Jugador** | **Suma de Habilidades** | **Rangos Alcanzados**               | **Sueldo Calculado** |
+|-------------|--------------------------|-------------------------------------|-----------------------|
+| **A**       | 565                      | Rango 1: 565 puntos                | **615,000**          |
+| **B**       | 625                      | Rango 1: 600 puntos<br>Rango 2: 25 puntos | **680,000**   |
+| **C**       | 597                      | Rango 1: 597 puntos                | **597,000**          |
+| **D**       | 300 (otras habilidades)<br>85 (portero) | Rango 1: 300 puntos<br>Portería: 85 x 3.0 | **605,000** |
+
