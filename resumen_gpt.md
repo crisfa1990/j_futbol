@@ -327,6 +327,23 @@ El cálculo del sueldo de los jugadores considera la suma total de sus habilidad
 
 Además, los porteros tendrán un cálculo ajustado que otorga mayor peso a la habilidad de portería, ya que su especialización es crucial para el rendimiento del equipo y no es comparable con otras posiciones.
 
+
+Para asegurar que el sistema de cálculo del sueldo sea completamente detallado y cubra todos los aspectos necesarios, vamos a expandir la propuesta, agregando consideraciones clave y explicaciones adicionales. Esto garantizará que no quede nada fuera durante el desarrollo e implementación. Aquí está la versión ampliada:
+
+Propuesta Final de Cálculo de Sueldo Basado en Habilidades Totales
+### Descripción Completa
+El sistema de cálculo de sueldos toma en cuenta:
+
+**Habilidades totales del jugador, dividiendo las contribuciones entre habilidades generales y específicas.**
+**Porteros con un cálculo diferenciado, donde la habilidad de portería tiene un mayor impacto proporcional en el sueldo.**
+**Rangos de habilidades, que agrupan la suma total en categorías, aplicando coeficientes progresivos para reflejar el costo creciente de jugadores más habilidosos.**
+
+Esta metodología se adapta a:
+
+* **Diversidad de jugadores: Premia a jugadores completos en todas las áreas.**
+- **Especialización de porteros: Reconoce la importancia crítica de porteros con alto desempeño en su área específica.**
+**Control económico: Mantiene la sostenibilidad de los equipos y las ligas mediante coeficientes ajustables.**
+
 ### Rangos y Coeficientes Generales
 Los coeficientes se aplican según la suma total de habilidades del jugador, distribuidas en rangos predefinidos:     
 
@@ -357,11 +374,76 @@ El sueldo de los porteros se calcula como la suma de:
 
 * **Contribución de portería: Habilidad de portería multiplicada por su multiplicador especial.**
 **Contribución de otras habilidades: Suma de las habilidades restantes evaluada por los coeficientes generales.**
+```python
+sueldo = sueldo_base + 
+         (portería * multiplicador_portería) + 
+         (suma_otras_habilidades_rango1 * coeficiente_1) + 
+         (suma_otras_habilidades_rango2 * coeficiente_2) + 
+         (suma_otras_habilidades_rango3 * coeficiente_3) + 
+         (suma_otras_habilidades_rango4 * coeficiente_4) + 
+         (suma_otras_habilidades_rango5 * coeficiente_5)
+```
+### Función de cálculo en Python
+
+```python
+def calcular_sueldo(habilidades, es_portero=False, sueldo_base=50000):
+    # Coeficientes por rango
+    coeficientes = {
+        "rango1": 1000,   # 0-600
+        "rango2": 12000,  # 601-1200
+        "rango3": 21000,  # 1201-1800
+        "rango4": 42000,  # 1801-2400
+        "rango5": 69000   # 2401+
+    }
+
+    # Multiplicadores para porteros
+    multiplicadores_porteria = {
+        "bajo": 1.5,  # Habilidad portería 0-50
+        "medio": 2.0, # Habilidad portería 51-80
+        "alto": 3.0   # Habilidad portería 81+
+    }
+
+    # Suma de habilidades
+    suma_habilidades = sum(habilidades)
+
+    # Identificar habilidad de portería
+    habilidad_porteria = habilidades.get("portería", 0)
+    suma_otras_habilidades = suma_habilidades - habilidad_porteria
+
+    # Determinar multiplicador de portería
+    if habilidad_porteria <= 50:
+        multiplicador_porteria = multiplicadores_porteria["bajo"]
+    elif habilidad_porteria <= 80:
+        multiplicador_porteria = multiplicadores_porteria["medio"]
+    else:
+        multiplicador_porteria = multiplicadores_porteria["alto"]
+
+    # Calcular contribución de portería
+    contribucion_porteria = habilidad_porteria * multiplicador_porteria if es_portero else 0
+
+    # Calcular contribución de otras habilidades
+    sueldo_otras_habilidades = sueldo_base
+    if suma_otras_habilidades <= 600:
+        sueldo_otras_habilidades += suma_otras_habilidades * coeficientes["rango1"]
+    elif suma_otras_habilidades <= 1200:
+        sueldo_otras_habilidades += (600 * coeficientes["rango1"]) + ((suma_otras_habilidades - 600) * coeficientes["rango2"])
+    elif suma_otras_habilidades <= 1800:
+        sueldo_otras_habilidades += (600 * coeficientes["rango1"]) + (600 * coeficientes["rango2"]) + ((suma_otras_habilidades - 1200) * coeficientes["rango3"])
+    elif suma_otras_habilidades <= 2400:
+        sueldo_otras_habilidades += (600 * coeficientes["rango1"]) + (600 * coeficientes["rango2"]) + (600 * coeficientes["rango3"]) + ((suma_otras_habilidades - 1800) * coeficientes["rango4"])
+    else:
+        sueldo_otras_habilidades += (600 * coeficientes["rango1"]) + (600 * coeficientes["rango2"]) + (600 * coeficientes["rango3"]) + (600 * coeficientes["rango4"]) + ((suma_otras_habilidades - 2400) * coeficientes["rango5"])
+
+    # Sueldo total
+    sueldo_total = sueldo_otras_habilidades + contribucion_porteria
+    return sueldo_total
+
+```
 
 
+## Ejemplo de calculo de sueldo
 
-
-## Habilidades de Jugador A
+### Habilidades de Jugador A
 
 | **Habilidad** | **Valor** |
 |---------------|-----------|
@@ -373,6 +455,12 @@ El sueldo de los porteros se calcula como la suma de:
 | Jugadas       | 82        |
 | Portería      | 10        |
 | Lateralidad   | 65        |
+
+**Suma total de habilidades: 565**
+Cálculo del sueldo:
+
+sueldo = 50000 + (565 * 1000)
+sueldo = 615,000
 
 ## Habilidades de Jugador B
 
@@ -386,6 +474,13 @@ El sueldo de los porteros se calcula como la suma de:
 | Jugadas       | 40        |
 | Portería      | 85        |
 | Lateralidad   | 30        |
+
+portería * multiplicador = 85 * 3.0 = 255
+
+Suma de otras habilidades: 300
+
+sueldo = 50000 + (300 * 1000) + 255000
+sueldo = 605,000
 
 ## Cálculos de Sueldos Detallados
 
