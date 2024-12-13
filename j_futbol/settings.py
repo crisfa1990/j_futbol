@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'equipos',
     'selecciones',
     'users',
-    'estadistica'
     
 ]
 
@@ -81,10 +80,15 @@ WSGI_APPLICATION = 'j_futbol.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'j_futbol',
+    'USER': 'postgres',
+    'PASSWORD': 'python2024',
+    'HOST': 'localhost',
+    'DATABASE_PORT': '5432'
     }
 }
+
 
 
 # Password validation
