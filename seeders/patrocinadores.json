@@ -1,0 +1,30 @@
+[
+    {
+      "nombre": "Nombre del patrocinador 1",
+      "presupuesto": 10000
+    },
+    {
+      "nombre": "Nombre del patrocinador 2",
+      "presupuesto": 50000
+    },
+    {
+      "nombre": "Nombre del patrocinador 3",
+      "presupuesto": 100000
+    },
+    {
+      "nombre": "Nombre del patrocinador 4",
+      "presupuesto": 200000
+    },
+    {
+      "nombre": "Nombre del patrocinador 5",
+      "presupuesto": 500000
+    },
+    {
+    "nombre": "Nombre del patrocinador 6",
+    "presupuesto": 650000
+    },
+    {
+    "nombre": "Nombre del patrocinador 7",
+    "presupuesto": 450000
+    }
+]
