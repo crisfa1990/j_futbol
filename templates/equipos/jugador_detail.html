@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ jugador.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <img src="" class="card-img-top" alt="{{ jugador.nombre }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ jugador.nombre }}</h5>
+            <p class="card-text">
+                <strong>Edad:</strong> {{ jugador.edad }}<br>
+                <strong>Moral:</strong> {{ jugador.moral }}<br>
+                <strong>Salario:</strong> {{ jugador.salario }}<br>
+                <strong>Lesión:</strong> {{ jugador.lesion|yesno:"Sí,No" }}<br>
+                <strong>Equipo:</strong> {{ jugador.equipo.nombre }}<br>
+                <strong>Nacionalidad:</strong> {{ jugador.nacionalidad.nombre }}<br>
+                <strong>Habilidades:</strong>
+                <ul>
+                    {% for key, value in jugador.habilidades.items %}
+                        <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
