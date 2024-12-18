@@ -13,9 +13,9 @@ class Competencia(models.Model):
 
     nombre = models.CharField(max_length=255)
     tipo = models.CharField(max_length=50, choices=TIPO_COMPETENCIA)
-    temporada = models.ForeignKey('equipos.Temporada', on_delete=models.CASCADE, related_name="competencias")
-    equipos = models.ManyToManyField('equipos.Equipo', related_name="competencias"),
-    nacionalidad = models.OneToOneField('selecciones.Nacionalidad', related_name="competencias"),
+    temporada = models.ForeignKey('equipos.Temporada', on_delete=models.CASCADE)
+    equipos = models.ManyToManyField('equipos.Equipo')
+    nacionalidad = models.OneToOneField('selecciones.Nacionalidad', on_delete=models.CASCADE)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
 
