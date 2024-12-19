@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ estadio.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <img src="{% static 'images/default_stadium.jpg' %}" class="card-img-top" alt="{{ estadio.nombre }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ estadio.nombre }}</h5>
+            <p class="card-text">
+                <strong>Nivel:</strong> {{ estadio.nivel }}<br>
+                <strong>Capacidad:</strong> {{ estadio.capacidad }}<br>
+                <strong>Equipo:</strong> {{ estadio.equipo.nombre }}<br>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Estadios{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        {% for estadio in estadios %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{% static 'images/default_stadium.jpg' %}" class="card-img-top" alt="{{ estadio.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ estadio.nombre }}</h5>
+                        <p class="card-text">
+                            <strong>Nivel:</strong> {{ estadio.nivel }}<br>
+                            <strong>Capacidad:</strong> {{ estadio.capacidad }}<br>
+                            <strong>Equipo:</strong> {{ estadio.equipo.nombre }}<br>
+                        </p>
+                        <a href="{% url 'estadio_detail' estadio.pk %}" class="btn btn-primary">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
