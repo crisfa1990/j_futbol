@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Entrenadores{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        {% for entrenador in entrenadores %}
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="{{ entrenador.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ entrenador.nombre }}</h5>
+                        <p class="card-text">
+                            <strong>Experiencia:</strong> {{ entrenador.experiencia }} años<br>
+                            <strong>Tipo:</strong> {{ entrenador.tipo }}<br>
+                            <strong>Entrenamiento:</strong> {{ entrenador.entrenamiento }}<br>
+                            <strong>Táctica:</strong> {{ entrenador.tactica }}<br>
+                            <strong>Motivación:</strong> {{ entrenador.motivacion }}<br>
+                            <strong>Equipo Actual:</strong> {% if entrenador.equipo_actual %}{{ entrenador.equipo_actual.nombre }}{% else %}N/A{% endif %}<br>
+                        </p>
+                        <a href="{% url 'entrenador_detail' entrenador.pk %}" class="btn btn-primary">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ entrenador.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <img src="" class="card-img-top" alt="{{ entrenador.nombre }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ entrenador.nombre }}</h5>
+            <p class="card-text">
+                <strong>Experiencia:</strong> {{ entrenador.experiencia }} años<br>
+                <strong>Tipo:</strong> {{ entrenador.tipo }}<br>
+                <strong>Entrenamiento:</strong> {{ entrenador.entrenamiento }}<br>
+                <strong>Táctica:</strong> {{ entrenador.tactica }}<br>
+                <strong>Motivación:</strong> {{ entrenador.motivacion }}<br>
+                <strong>Equipo Actual:</strong> {% if entrenador.equipo_actual %}{{ entrenador.equipo_actual.nombre }}{% else %}N/A{% endif %}<br>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

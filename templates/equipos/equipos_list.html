@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Equipos{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        {% for equipo in equipos %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="{{ equipo.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ equipo.nombre }}</h5>
+                        <p class="card-text">
+                            <strong>Fundación:</strong> {{ equipo.fundacion }}<br>
+                            <strong>Presupuesto:</strong> {{ equipo.presupuesto }}<br>
+                            <strong>Nacionalidad:</strong> {{ equipo.nacionalidad.nombre }}<br>
+                            <strong>Patrocinador:</strong> {{ equipo.patrocinador.nombre }}<br>
+                            <strong>Competencias:</strong>
+                            <ul>
+                                {% for competencia in equipo.competencias.all %}
+                                    <li>{{ competencia.nombre }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                        <a href="{% url 'equipo_detail' equipo.pk %}" class="btn btn-primary">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

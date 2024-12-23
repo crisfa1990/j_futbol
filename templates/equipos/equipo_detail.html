@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ equipo.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card mb-4">
+        <img src="" class="card-img-top" alt="{{ equipo.nombre }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ equipo.nombre }}</h5>
+            <p class="card-text">
+                <strong>Fundación:</strong> {{ equipo.fundacion }}<br>
+                <strong>Presupuesto:</strong> {{ equipo.presupuesto }}<br>
+                <strong>Nacionalidad:</strong> {{ equipo.nacionalidad.nombre }}<br>
+                <strong>Patrocinador:</strong> {{ equipo.patrocinador.nombre }}<br>
+                <strong>Competencias:</strong>
+                <ul>
+                    {% for competencia in equipo.competencias.all %}
+                        <li>{{ competencia.nombre }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+        </div>
+    </div>
+
+    <h3>Jugadores</h3>
+    <div class="row">
+        {% for jugador in equipo.jugadores.all %}
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                <div class="card">
+                    <img src="" class="card-img-top" alt="{{ jugador.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ jugador.nombre }}</h5>
+                        <p class="card-text">
+                            <strong>Edad:</strong> {{ jugador.edad }}<br>
+                            <strong>Moral:</strong> {{ jugador.moral }}<br>
+                            <strong>Salario:</strong> {{ jugador.salario }}<br>
+                            <strong>Lesión:</strong> {{ jugador.lesion|yesno:"Sí,No" }}<br>
+                            <strong>Nacionalidad:</strong> {{ jugador.nacionalidad.nombre }}<br>
+                            <strong>Habilidades:</strong>
+                            <ul>
+                                {% for key, value in jugador.habilidades.items %}
+                                    <li>{{ key }}: {{ value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                        <a href="{% url 'jugador_detail' jugador.pk %}" class="btn btn-primary">Ver detalles</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
