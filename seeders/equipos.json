@@ -181,5 +181,30 @@
     {"model": "equipos.jugador", "pk": 135, "fields": {"nombre": "Suplente 5", "edad": 29, "habilidades": {"remate": 50, "desmarques": 60, "defensa": 40, "mentalidad": 70, "pases": 50, "jugadas": 60, "portero": 30, "lateralidad": 40}, "moral": 88, "salario": "170000.00", "lesion": false, "equipo": 8, "nacionalidad": 2}},
     {"model": "equipos.jugador", "pk": 136, "fields": {"nombre": "Suplente 6", "edad": 18, "habilidades": {"remate": 55, "desmarques": 45, "defensa": 65, "mentalidad": 50, "pases": 55, "jugadas": 45, "portero": 40, "lateralidad": 45}, "moral": 90, "salario": "175000.00", "lesion": false, "equipo": 8, "nacionalidad": 3}},
 
-    {"model": "competiciones.competencia", "pk": 1, "fields": {"nombre": "Liga Local 2024", "tipo": "Liga Local", "temporada": 1, "equipos": [1, 2, 3, 4, 5, 6, 7, 8], "nacionalidad": 1, "fecha_inicio": "2024-12-17", "fecha_fin": "2025-12-31"}}
+    {"model": "competiciones.competencia", "pk": 1, "fields": {"nombre": "Liga Local 2024", "tipo": "Liga Local", "temporada": 1, "equipos": [1, 2, 3, 4, 5, 6, 7, 8], "nacionalidad": 1, "fecha_inicio": "2024-12-17", "fecha_fin": "2025-12-31"}},
+
+    {"model": "equipos.partido", "pk": 1, "fields": {"fecha": "2023-01-15", "equipo_local": 1, "equipo_visitante": 2, "competencia": 1, "temporada": 1, "estadio": 1, "goles_local": 2, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 2, "fields": {"fecha": "2023-02-20", "equipo_local": 3, "equipo_visitante": 4, "competencia": 1, "temporada": 1, "estadio": 2, "goles_local": 1, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 3, "fields": {"fecha": "2023-03-10", "equipo_local": 5, "equipo_visitante": 6, "competencia": 1, "temporada": 1, "estadio": 3, "goles_local": 3, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 4, "fields": {"fecha": "2023-04-05", "equipo_local": 7, "equipo_visitante": 8, "competencia": 1, "temporada": 1, "estadio": 4, "goles_local": 0, "goles_visitante": 0}},
+    {"model": "equipos.partido", "pk": 5, "fields": {"fecha": "2023-05-12", "equipo_local": 1, "equipo_visitante": 3, "competencia": 1, "temporada": 1, "estadio": 1, "goles_local": 2, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 6, "fields": {"fecha": "2023-06-18", "equipo_local": 2, "equipo_visitante": 4, "competencia": 1, "temporada": 1, "estadio": 2, "goles_local": 1, "goles_visitante": 3}}, 
+    {"model": "equipos.partido", "pk": 7, "fields": {"fecha": "2023-07-22", "equipo_local": 5, "equipo_visitante": 7, "competencia": 1, "temporada": 1, "estadio": 3, "goles_local": 0, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 8, "fields": {"fecha": "2023-08-30", "equipo_local": 6, "equipo_visitante": 8, "competencia": 1, "temporada": 1, "estadio": 4, "goles_local": 4, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 9, "fields": {"fecha": "2023-09-15", "equipo_local": 1, "equipo_visitante": 5, "competencia": 1, "temporada": 1, "estadio": 1, "goles_local": 3, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 10, "fields": {"fecha": "2023-10-20", "equipo_local": 2, "equipo_visitante": 6, "competencia": 1, "temporada": 1, "estadio": 2, "goles_local": 2, "goles_visitante": 2}},
+    {"model": "equipos.partido", "pk": 11, "fields": {"fecha": "2023-11-25", "equipo_local": 3, "equipo_visitante": 7, "competencia": 1, "temporada": 1, "estadio": 3, "goles_local": 1, "goles_visitante": 3}}, 
+    {"model": "equipos.partido", "pk": 12, "fields": {"fecha": "2023-12-05", "equipo_local": 4, "equipo_visitante": 8, "competencia": 1, "temporada": 1, "estadio": 4, "goles_local": 0, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 13, "fields": {"fecha": "2024-01-10", "equipo_local": 1, "equipo_visitante": 6, "competencia": 1, "temporada": 1, "estadio": 1, "goles_local": 2, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 14, "fields": {"fecha": "2024-02-15", "equipo_local": 2, "equipo_visitante": 5, "competencia": 1, "temporada": 1, "estadio": 2, "goles_local": 1, "goles_visitante": 3}}, 
+    {"model": "equipos.partido", "pk": 15, "fields": {"fecha": "2024-03-20", "equipo_local": 3, "equipo_visitante": 8, "competencia": 1, "temporada": 1, "estadio": 3, "goles_local": 0, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 16, "fields": {"fecha": "2024-04-25", "equipo_local": 4, "equipo_visitante": 7, "competencia": 1, "temporada": 1, "estadio": 4, "goles_local": 2, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 17, "fields": {"fecha": "2024-05-30", "equipo_local": 1, "equipo_visitante": 4, "competencia": 1, "temporada": 1, "estadio": 1, "goles_local": 3, "goles_visitante": 0}}, 
+    {"model": "equipos.partido", "pk": 18, "fields": {"fecha": "2024-06-10", "equipo_local": 2, "equipo_visitante": 3, "competencia": 1, "temporada": 1, "estadio": 2, "goles_local": 1, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 19, "fields": {"fecha": "2024-07-15", "equipo_local": 5, "equipo_visitante": 8, "competencia": 1, "temporada": 1, "estadio": 3, "goles_local": 2, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 20, "fields": {"fecha": "2024-08-20", "equipo_local": 6, "equipo_visitante": 7, "competencia": 1, "temporada": 1, "estadio": 4, "goles_local": 1, "goles_visitante": 3}},
+    {"model": "equipos.partido", "pk": 21, "fields": {"fecha": "2024-09-25", "equipo_local": 1, "equipo_visitante": 7, "competencia": 1, "temporada": 1, "estadio": 1, "goles_local": 2, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 22, "fields": {"fecha": "2024-10-30", "equipo_local": 2, "equipo_visitante": 8, "competencia": 1, "temporada": 1, "estadio": 2, "goles_local": 1, "goles_visitante": 2}}, 
+    {"model": "equipos.partido", "pk": 23, "fields": {"fecha": "2024-11-15", "equipo_local": 3, "equipo_visitante": 5, "competencia": 1, "temporada": 1, "estadio": 3, "goles_local": 3, "goles_visitante": 1}}, 
+    {"model": "equipos.partido", "pk": 24, "fields": {"fecha": "2024-12-20", "equipo_local": 4, "equipo_visitante": 6, "competencia": 1, "temporada": 1, "estadio": 4, "goles_local": 0, "goles_visitante": 0}}
 ]

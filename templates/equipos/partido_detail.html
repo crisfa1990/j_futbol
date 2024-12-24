@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ partido.equipo_local.nombre }} vs {{ partido.equipo_visitante.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <img src="" class="card-img-top" alt="{{ partido }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ partido.equipo_local.nombre }} vs {{ partido.equipo_visitante.nombre }}</h5>
+            <p class="card-text">
+                <strong>Fecha:</strong> {{ partido.fecha }}<br>
+                <strong>Competencia:</strong> {{ partido.competencia.nombre }}<br>
+                <strong>Temporada:</strong> {{ partido.temporada.anio }}<br>
+                <strong>Estadio:</strong> {% if partido.estadio %}{{ partido.estadio.nombre }}{% else %}N/A{% endif %}<br>
+                <strong>Goles Local:</strong> {{ partido.goles_local }}<br>
+                <strong>Goles Visitante:</strong> {{ partido.goles_visitante }}<br>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
