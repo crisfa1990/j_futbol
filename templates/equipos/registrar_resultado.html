@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Resultado{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Registrar Resultado</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="goles_local" class="form-label">Goles Local</label>
+            <input type="number" class="form-control" id="goles_local" name="goles_local" required>
+        </div>
+        <div class="mb-3">
+            <label for="goles_visitante" class="form-label">Goles Visitante</label>
+            <input type="number" class="form-control" id="goles_visitante" name="goles_visitante" required>
+        </div>
+        <div class="mb-3">
+            <label for="goles_jugadores" class="form-label">Goles Jugadores (IDs separados por comas)</label>
+            <input type="text" class="form-control" id="goles_jugadores" name="goles_jugadores" required>
+        </div>
+        <div class="mb-3">
+            <label for="asistencias_jugadores" class="form-label">Asistencias Jugadores (IDs separados por comas)</label>
+            <input type="text" class="form-control" id="asistencias_jugadores" name="asistencias_jugadores" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
+</div>
+{% endblock %}

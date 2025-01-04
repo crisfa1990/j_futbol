@@ -5,7 +5,6 @@
 {% block content %}
 <div class="container mt-5">
     <div class="card">
-        <img src="" class="card-img-top" alt="{{ partido }}">
         <div class="card-body">
             <h5 class="card-title">{{ partido.equipo_local.nombre }} vs {{ partido.equipo_visitante.nombre }}</h5>
             <p class="card-text">
@@ -16,6 +15,64 @@
                 <strong>Goles Local:</strong> {{ partido.goles_local }}<br>
                 <strong>Goles Visitante:</strong> {{ partido.goles_visitante }}<br>
             </p>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Goles del equipo local</h5>
+            <ul>
+                {% for jugador_id, goles in partido.goles_jugadores_local.items %}
+                    {% if jugadores_dict.jugador_id %}
+                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ goles }} goles</li>
+                    {% else %}
+                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h5>Goles del equipo visitante</h5>
+            <ul>
+                {% for jugador_id, goles in partido.goles_jugadores_visitante.items %}
+                    {% if jugadores_dict.jugador_id %}
+                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ goles }} goles</li>
+                    {% else %}
+                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Asistencias del equipo local</h5>
+            <ul>
+                {% for jugador_id, asistencias in partido.asistencias_jugadores_local.items %}
+                    {% if jugadores_dict.jugador_id %}
+                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ asistencias }} asistencias</li>
+                    {% else %}
+                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h5>Asistencias del equipo visitante</h5>
+            <ul>
+                {% for jugador_id, asistencias in partido.asistencias_jugadores_visitante.items %}
+                    {% if jugadores_dict.jugador_id %}
+                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ asistencias }} asistencias</li>
+                    {% else %}
+                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </div>

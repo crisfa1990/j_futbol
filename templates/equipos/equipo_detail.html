@@ -13,38 +13,26 @@
                 <strong>Presupuesto:</strong> {{ equipo.presupuesto }}<br>
                 <strong>Nacionalidad:</strong> {{ equipo.nacionalidad.nombre }}<br>
                 <strong>Patrocinador:</strong> {{ equipo.patrocinador.nombre }}<br>
-                <strong>Competencias:</strong>
-                <ul>
-                    {% for competencia in equipo.competencias.all %}
-                        <li>{{ competencia.nombre }}</li>
-                    {% endfor %}
-                </ul>
+                <strong>Goles a Favor:</strong> {{ equipo.goles_favor }}<br>
+                <strong>Goles en Contra:</strong> {{ equipo.goles_contra }}<br>
+                <strong>Asistencias:</strong> {{ equipo.asistencias }}<br>
+                <strong>Partidos Jugados:</strong> {{ equipo.partidos_jugados }}<br>
             </p>
         </div>
     </div>
 
-    <h3>Jugadores</h3>
+    <h3>Estadísticas por Temporada</h3>
     <div class="row">
-        {% for jugador in equipo.jugadores.all %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        {% for estadistica in estadisticas %}
+            <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="" class="card-img-top" alt="{{ jugador.nombre }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ jugador.nombre }}</h5>
+                        <h5 class="card-title">{{ estadistica.temporada.anio }} - {{ estadistica.jugador.nombre }}</h5>
                         <p class="card-text">
-                            <strong>Edad:</strong> {{ jugador.edad }}<br>
-                            <strong>Moral:</strong> {{ jugador.moral }}<br>
-                            <strong>Salario:</strong> {{ jugador.salario }}<br>
-                            <strong>Lesión:</strong> {{ jugador.lesion|yesno:"Sí,No" }}<br>
-                            <strong>Nacionalidad:</strong> {{ jugador.nacionalidad.nombre }}<br>
-                            <strong>Habilidades:</strong>
-                            <ul>
-                                {% for key, value in jugador.habilidades.items %}
-                                    <li>{{ key }}: {{ value }}</li>
-                                {% endfor %}
-                            </ul>
+                            <strong>Goles:</strong> {{ estadistica.goles }}<br>
+                            <strong>Asistencias:</strong> {{ estadistica.asistencias }}<br>
+                            <strong>Partidos:</strong> {{ estadistica.partidos }}<br>
                         </p>
-                        <a href="{% url 'jugador_detail' jugador.pk %}" class="btn btn-primary">Ver detalles</a>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card">
+    <div class="card mb-4">
         <img src="" class="card-img-top" alt="{{ jugador.nombre }}">
         <div class="card-body">
             <h5 class="card-title">{{ jugador.nombre }}</h5>
@@ -15,14 +15,29 @@
                 <strong>Lesión:</strong> {{ jugador.lesion|yesno:"Sí,No" }}<br>
                 <strong>Equipo:</strong> {{ jugador.equipo.nombre }}<br>
                 <strong>Nacionalidad:</strong> {{ jugador.nacionalidad.nombre }}<br>
-                <strong>Habilidades:</strong>
-                <ul>
-                    {% for key, value in jugador.habilidades.items %}
-                        <li>{{ key }}: {{ value }}</li>
-                    {% endfor %}
-                </ul>
+                <strong>Goles en Carrera:</strong> {{ jugador.goles_carrera }}<br>
+                <strong>Asistencias en Carrera:</strong> {{ jugador.asistencias_carrera }}<br>
+                <strong>Partidos en Carrera:</strong> {{ jugador.partidos_carrera }}<br>
             </p>
         </div>
+    </div>
+
+    <h3>Estadísticas por Temporada</h3>
+    <div class="row">
+        {% for estadistica in estadisticas %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ estadistica.temporada.anio }} - {{ estadistica.equipo.nombre }}</h5>
+                        <p class="card-text">
+                            <strong>Goles:</strong> {{ estadistica.goles }}<br>
+                            <strong>Asistencias:</strong> {{ estadistica.asistencias }}<br>
+                            <strong>Partidos:</strong> {{ estadistica.partidos }}<br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

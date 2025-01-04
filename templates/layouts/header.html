@@ -9,16 +9,23 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Jugadores</a>
+                        <a class="nav-link" href="{% url 'jugadores_list' %}">Jugadores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Equipos</a>
+                        <a class="nav-link" href="{% url 'equipos_list' %}">Equipos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Competencias</a>
+                        <a class="nav-link" href="{% url 'entrenadores_list' %}">Entrenadores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'estadios_list' %}">Estadios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'partidos_list' %}">Partidos</a>
                     </li>
                 </ul>
             </div>
+
         </div>
     </nav>
 </header>

@@ -17,6 +17,10 @@ class Equipo(models.Model):
     nacionalidad = models.ForeignKey(Nacionalidad, on_delete=models.SET_NULL, null=True, related_name="equipos")
     patrocinador = models.ForeignKey(Patrocinador, on_delete=models.SET_NULL, null=True, related_name="equipos")
     competencias = models.ManyToManyField(Competencia)
+    goles_favor = models.IntegerField(default=0)
+    goles_contra = models.IntegerField(default=0)
+    asistencias = models.IntegerField(default=0)
+    partidos_jugados = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -39,6 +43,9 @@ class Jugador(models.Model):
     lesion = models.BooleanField(default=False)
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name="jugadores")
     nacionalidad = models.ForeignKey(Nacionalidad, on_delete=models.SET_NULL, null=True, related_name="jugadores")
+    goles_carrera = models.IntegerField(default=0)
+    asistencias_carrera = models.IntegerField(default=0)
+    partidos_carrera = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -90,6 +97,10 @@ class Partido(models.Model):
     estadio = models.ForeignKey(Estadio, on_delete=models.SET_NULL, null=True, related_name="partidos")
     goles_local = models.IntegerField(default=0)
     goles_visitante = models.IntegerField(default=0)
+    goles_jugadores_local = models.JSONField(default=dict)  # {jugador_id: goles}
+    goles_jugadores_visitante = models.JSONField(default=dict)  # {jugador_id: goles}
+    asistencias_jugadores_local = models.JSONField(default=dict)  # {jugador_id: asistencias}
+    asistencias_jugadores_visitante = models.JSONField(default=dict)  # {jugador_id: asistencias}
 
     def __str__(self):
         return f"{self.equipo_local.nombre} vs {self.equipo_visitante.nombre} - {self.competencia.nombre}"
@@ -104,8 +115,9 @@ class EstadisticaPorTemporada(models.Model):
 
     class Meta:
         unique_together = ("jugador", "temporada", "equipo")
+        indexes = [
+            models.Index(fields=['jugador', 'temporada', 'equipo']),
+        ]
 
     def __str__(self):
-        return f"{self.jugador.nombre} - {self.temporada.anio}"    
-
-
+        return f"{self.jugador.nombre} - {self.temporada.anio}"
