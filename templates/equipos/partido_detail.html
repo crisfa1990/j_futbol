@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}{{ partido.equipo_local.nombre }} vs {{ partido.equipo_visitante.nombre }}{% endblock %}
 
@@ -25,11 +26,13 @@
             <h5>Goles del equipo local</h5>
             <ul>
                 {% for jugador_id, goles in partido.goles_jugadores_local.items %}
-                    {% if jugadores_dict.jugador_id %}
-                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ goles }} goles</li>
-                    {% else %}
-                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
-                    {% endif %}
+                    {% with jugador=jugadores_dict|get_item:jugador_id %}
+                        {% if jugador %}
+                            <li>{{ jugador.nombre }}: {{ goles }} goles</li>
+                        {% else %}
+                            <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                        {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </ul>
         </div>
@@ -37,11 +40,13 @@
             <h5>Goles del equipo visitante</h5>
             <ul>
                 {% for jugador_id, goles in partido.goles_jugadores_visitante.items %}
-                    {% if jugadores_dict.jugador_id %}
-                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ goles }} goles</li>
-                    {% else %}
-                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
-                    {% endif %}
+                    {% with jugador=jugadores_dict|get_item:jugador_id %}
+                        {% if jugador %}
+                            <li>{{ jugador.nombre }}: {{ goles }} goles</li>
+                        {% else %}
+                            <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                        {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </ul>
         </div>
@@ -54,11 +59,13 @@
             <h5>Asistencias del equipo local</h5>
             <ul>
                 {% for jugador_id, asistencias in partido.asistencias_jugadores_local.items %}
-                    {% if jugadores_dict.jugador_id %}
-                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ asistencias }} asistencias</li>
-                    {% else %}
-                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
-                    {% endif %}
+                    {% with jugador=jugadores_dict|get_item:jugador_id %}
+                        {% if jugador %}
+                            <li>{{ jugador.nombre }}: {{ asistencias }} asistencias</li>
+                        {% else %}
+                            <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                        {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </ul>
         </div>
@@ -66,11 +73,13 @@
             <h5>Asistencias del equipo visitante</h5>
             <ul>
                 {% for jugador_id, asistencias in partido.asistencias_jugadores_visitante.items %}
-                    {% if jugadores_dict.jugador_id %}
-                        <li>{{ jugadores_dict.jugador_id.nombre }}: {{ asistencias }} asistencias</li>
-                    {% else %}
-                        <li>Jugador con ID {{ jugador_id }} no encontrado</li>
-                    {% endif %}
+                    {% with jugador=jugadores_dict|get_item:jugador_id %}
+                        {% if jugador %}
+                            <li>{{ jugador.nombre }}: {{ asistencias }} asistencias</li>
+                        {% else %}
+                            <li>Jugador con ID {{ jugador_id }} no encontrado</li>
+                        {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </ul>
         </div>

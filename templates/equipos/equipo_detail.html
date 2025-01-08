@@ -39,4 +39,43 @@
         {% endfor %}
     </div>
 </div>
+
+<div class="container mt-5">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ equipo.nombre }}</h5>
+            <p class="card-text">
+                <strong>Partidos Jugados:</strong> {{ equipo.partidos_jugados }}<br>
+            </p>
+        </div>
+    </div>
+
+    <h3>Listado de Jugadores</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Posición</th>
+                <th>Nacionalidad</th>
+                <th>Moral</th>
+                <th>Salario</th>
+                <th>Lesión</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for jugador in jugadores %}
+                <tr>
+                    <td>{{ jugador.nombre }}</td>
+                    <td>{{ jugador.edad }}</td>
+                    <td>{{ jugador.posicion }}</td>
+                    <td>{{ jugador.nacionalidad.nombre }}</td>
+                    <td>{{ jugador.moral }}</td>
+                    <td>{{ jugador.salario }}</td>
+                    <td>{{ jugador.lesion|yesno:"Sí,No" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

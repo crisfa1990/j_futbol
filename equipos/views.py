@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import *
 
 # JUGADORES
@@ -27,8 +27,8 @@ def equipos_list(request):
 
 def equipo_detail(request, pk):
     equipo = get_object_or_404(Equipo, pk=pk)
-    estadisticas = EstadisticaPorTemporada.objects.filter(equipo=equipo)
-    return render(request, 'equipos/equipo_detail.html', {'equipo': equipo, 'estadisticas': estadisticas})
+    jugadores = Jugador.objects.filter(equipo=equipo)
+    return render(request, 'equipos/equipo_detail.html', {'equipo': equipo, 'jugadores': jugadores})
 
 # ENTRENADORES
 def entrenadores_list(request):
@@ -54,6 +54,7 @@ def partido_detail(request, pk):
     )
     jugadores = Jugador.objects.filter(pk__in=jugadores_ids)
     jugadores_dict = {str(jugador.pk): jugador for jugador in jugadores}
+
     return render(request, 'equipos/partido_detail.html', {
         'partido': partido,
         'jugadores_dict': jugadores_dict
