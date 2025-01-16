@@ -1,11 +1,11 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from selecciones.models import Nacionalidad
 from competiciones.models import Competencia
 
 class Patrocinador(models.Model):
     nombre = models.CharField(max_length=255)
-    presupuesto = models.IntegerField()
+    objetivo_basico = models.IntegerField(default = 0)
+    objetivo_extra = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.nombre
@@ -30,6 +30,7 @@ class Estadio(models.Model):
     nivel = models.IntegerField()  # Por ejemplo, 1 a 5
     capacidad = models.IntegerField()
     equipo = models.OneToOneField('Equipo', on_delete=models.CASCADE, related_name="estadio")
+    mantenimiento = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -38,7 +39,8 @@ class Jugador(models.Model):
     nombre = models.CharField(max_length=255)
     edad = models.IntegerField()
     habilidades = models.JSONField()
-    moral = models.IntegerField()
+    moral = models.IntegerField(default = 5) # Escala de 0-10
+    forma_fisica = models.IntegerField(default = 5) # Escala de 0-10    
     salario = models.DecimalField(max_digits=15, decimal_places=2)
     lesion = models.BooleanField(default=False)
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name="jugadores")
@@ -46,6 +48,9 @@ class Jugador(models.Model):
     goles_carrera = models.IntegerField(default=0)
     asistencias_carrera = models.IntegerField(default=0)
     partidos_carrera = models.IntegerField(default=0)
+    partidos_internacionales = models.IntegerField(default=0)
+    goles_internacionales = models.IntegerField(default=0)
+    asistencias_internacionales = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
@@ -101,9 +106,27 @@ class Partido(models.Model):
     goles_jugadores_visitante = models.JSONField(default=dict)  # {jugador_id: goles}
     asistencias_jugadores_local = models.JSONField(default=dict)  # {jugador_id: asistencias}
     asistencias_jugadores_visitante = models.JSONField(default=dict)  # {jugador_id: asistencias}
+    espectadores = models.IntegerField(default=0)  # Total de personas que vieron el partido
+    CLIMA_OPCIONES = [
+        ('Despejado', 'Despejado'),
+        ('Parcialmente nublado', 'Parcialmente nublado'),
+        ('Nublado', 'Nublado'),
+        ('Lluvia', 'Lluvia'),
+    ]
+    clima = models.CharField(max_length=20, choices=CLIMA_OPCIONES, default='Despejado')
 
     def __str__(self):
         return f"{self.equipo_local.nombre} vs {self.equipo_visitante.nombre} - {self.competencia.nombre}"
+    
+class Transferencia(models.Model):
+    jugador = models.ForeignKey('Jugador', on_delete=models.CASCADE, related_name='transferencias')
+    equipo_anterior = models.ForeignKey('Equipo', on_delete=models.SET_NULL, null=True, related_name='salidas')
+    equipo_nuevo = models.ForeignKey('Equipo', on_delete=models.SET_NULL, null=True, related_name='fichajes')
+    monto_transferencia = models.DecimalField(max_digits=15, decimal_places=2)
+    fecha_transferencia = models.DateField()
+
+    def __str__(self):
+        return f"{self.jugador.nombre} de {self.equipo_anterior} a {self.equipo_nuevo}" if self.equipo_anterior and self.equipo_nuevo else self.jugador.nombre
 
 class EstadisticaPorTemporada(models.Model):
     jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name="estadisticas")

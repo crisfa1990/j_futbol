@@ -5,10 +5,20 @@ Representa a los patrocinadores que financian a los equipos.
 
 - **Atributos**:
   - `nombre` (CharField): Nombre del patrocinador.
-  - `presupuesto` (IntegerField): Presupuesto del patrocinador.
+  - `objetivo_basico` (IntegerField): Objetivo básico del patrocinador.
+  - `objetivo_extra` (IntegerField): Objetivo extra del patrocinador.
 
 - **Métodos**:
   - `__str__`: Devuelve el nombre del patrocinador.
+
+## Modelo `Nacionalidad`
+Representa la nacionalidad de los jugadores y selecciones.
+
+- **Atributos**:
+  - `nombre` (CharField): Nombre de la nacionalidad.
+
+- **Métodos**:
+  - `__str__`: Devuelve el nombre de la nacionalidad.
 
 ## Modelo `Equipo`
 Representa a un equipo de fútbol.
@@ -54,6 +64,8 @@ Representa un estadio de fútbol.
   - `nombre` (CharField): Nombre del estadio.
   - `nivel` (IntegerField): Nivel del estadio.
   - `capacidad` (IntegerField): Capacidad del estadio.
+  - `equipo` (OneToOneField): Relación con el modelo `Equipo`.
+  - `mantenimiento` (IntegerField): Costo de mantenimiento del estadio.
 
 - **Métodos**:
   - `__str__`: Devuelve el nombre del estadio.
@@ -98,6 +110,8 @@ Representa un partido de fútbol.
   - `goles_jugadores_visitante` (JSONField): Goles de los jugadores del equipo visitante.
   - `asistencias_jugadores_local` (JSONField): Asistencias de los jugadores del equipo local.
   - `asistencias_jugadores_visitante` (JSONField): Asistencias de los jugadores del equipo visitante.
+  - `espectadores` (IntegerField): Número de espectadores del partido.
+  - `clima` (CharField): Clima durante el partido.
 
 - **Métodos**:
   - `__str__`: Devuelve una cadena con los nombres de los equipos y la competencia.
@@ -127,15 +141,45 @@ Representa una competencia de fútbol.
   - `nacionalidad` (OneToOneField): Relación con el modelo `Nacionalidad`.
   - `fecha_inicio` (DateField): Fecha de inicio de la competencia.
   - `fecha_fin` (DateField): Fecha de fin de la competencia.
+  - `bono_por_partido` (IntegerField): Bono por partido.
+  - `bono_por_titulo` (IntegerField): Bono por título.
+  - `bono_por_victoria` (IntegerField): Bono por victoria.
+  - `bono_por_clasificacion` (IntegerField): Bono por clasificación.
+  - `sistema_puntos` (JSONField): Sistema de puntos de la competencia.
+  - `fases` (JSONField): Fases de la competencia.
+  - `trofeo` (BooleanField): Indica si la competencia tiene un trofeo asociado.
 
 - **Métodos**:
   - `__str__`: Devuelve el nombre de la competencia.
+  - `esta_disponible`: Verifica si la competencia está disponible en una fecha específica.
+  - `calcular_inversion_total`: Calcula la inversión total en la competencia.
 
-## Modelo `Nacionalidad`
-Representa la nacionalidad de los jugadores y selecciones.
+## Relaciones entre los Modelos
+- **Patrocinador** y **Equipo**: Relación de uno a muchos. Un patrocinador puede financiar varios equipos.
+- **Nacionalidad** y **Equipo**: Relación de uno a muchos. Una nacionalidad puede tener varios equipos.
+- **Nacionalidad** y **Jugador**: Relación de uno a muchos. Una nacionalidad puede tener varios jugadores.
+- **Equipo** y **Jugador**: Relación de uno a muchos. Un equipo puede tener varios jugadores.
+- **Equipo** y **Estadio**: Relación de uno a uno. Un equipo tiene un estadio.
+- **Jugador** y **Lesion**: Relación de uno a muchos. Un jugador puede tener varias lesiones.
+- **Equipo** y **Competencia**: Relación de muchos a muchos. Un equipo puede participar en varias competencias y una competencia puede tener varios equipos.
+- **Temporada** y **Competencia**: Relación de uno a muchos. Una temporada puede tener varias competencias.
+- **Temporada** y **Partido**: Relación de uno a muchos. Una temporada puede tener varios partidos.
+- **Competencia** y **Partido**: Relación de uno a muchos. Una competencia puede tener varios partidos.
+- **Equipo** y **Partido**: Relación de uno a muchos. Un equipo puede tener varios partidos como local y varios partidos como visitante.
+- **Estadio** y **Partido**: Relación de uno a muchos. Un estadio puede tener varios partidos.
+- **Jugador** y **EstadisticaPorTemporada**: Relación de uno a muchos. Un jugador puede tener varias estadísticas por temporada.
+- **Temporada** y **EstadisticaPorTemporada**: Relación de uno a muchos. Una temporada puede tener varias estadísticas por temporada.
+- **Equipo** y **EstadisticaPorTemporada**: Relación de uno a muchos. Un equipo puede tener varias estadísticas por temporada.
 
-- **Atributos**:
-  - `nombre` (CharField): Nombre de la nacionalidad.
-
-- **Métodos**:
-  - `__str__`: Devuelve el nombre de la nacionalidad.
+## Orden de Creación de los Registros
+1. Crear registros de `Nacionalidad`.
+2. Crear registros de `Patrocinador`.
+3. Crear registros de `Equipo` vinculados a `Nacionalidad` y `Patrocinador`.
+4. Crear registros de `Estadio` vinculados a `Equipo`.
+5. Crear registros de `Jugador` vinculados a `Equipo` y `Nacionalidad`.
+6. Crear registros de `Temporada`.
+7. Crear registros de `Competencia` vinculados a `Temporada` y `Nacionalidad`.
+8. Vincular `Equipo` a `Competencia`.
+9. Crear registros de `Partido` vinculados a `Equipo`, `Competencia`, `Temporada` y `Estadio`.
+10. Crear registros de `Lesion` vinculados a `Jugador`.
+11. Crear registros de `EstadisticaPorTemporada` vinculados a `Jugador`, `Temporada` y `Equipo`.
