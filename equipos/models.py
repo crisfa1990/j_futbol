@@ -38,6 +38,7 @@ class Estadio(models.Model):
 class Jugador(models.Model):
     nombre = models.CharField(max_length=255)
     edad = models.IntegerField()
+    portero = models.BooleanField(default=False)
     habilidades = models.JSONField()
     moral = models.IntegerField(default = 5) # Escala de 0-10
     forma_fisica = models.IntegerField(default = 5) # Escala de 0-10    

@@ -44,6 +44,7 @@ Representa a un jugador de fútbol.
 - **Atributos**:
   - `nombre` (CharField): Nombre del jugador.
   - `edad` (IntegerField): Edad del jugador.
+  - `portero` (BooleanField): Boolean es true si es portero, default false
   - `habilidades` (JSONField): Habilidades del jugador.
   - `moral` (IntegerField): Moral del jugador.
   - `salario` (DecimalField): Salario del jugador.

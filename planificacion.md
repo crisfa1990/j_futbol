@@ -67,6 +67,8 @@ Desarrollar los modelos de datos básicos para el sistema de gestión del club d
 #### **Acciones adicionales**:
 - **Migraciones**: Realizar las migraciones correspondientes para aplicar estos modelos a la base de datos.
 - **Pruebas iniciales**: Asegurarse de que los modelos y las relaciones funcionan correctamente mediante pruebas básicas en Django Admin.
+#### **Informe avance:**: 
+**Logrado completamente 16-01-2025, revisar 1modelos.md para mas información.**
 
 ---
 
