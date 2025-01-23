@@ -1,5 +1,22 @@
 # Modelos del Proyecto de Gestión de Club de Fútbol
 
+## Índice
+- [Modelos del Proyecto de Gestión de Club de Fútbol](#modelos-del-proyecto-de-gestión-de-club-de-fútbol)
+  - [Índice](#índice)
+  - [Modelo `Patrocinador`](#modelo-patrocinador)
+  - [Modelo `Nacionalidad`](#modelo-nacionalidad)
+  - [Modelo `Equipo`](#modelo-equipo)
+  - [Modelo `Jugador`](#modelo-jugador)
+  - [Modelo `Estadio`](#modelo-estadio)
+  - [Modelo `Lesion`](#modelo-lesion)
+  - [Modelo `Temporada`](#modelo-temporada)
+  - [Modelo `Partido`](#modelo-partido)
+  - [Modelo `EstadisticaPorTemporada`](#modelo-estadisticaportemporada)
+  - [Modelo `Competencia`](#modelo-competencia)
+  - [Relaciones entre los Modelos](#relaciones-entre-los-modelos)
+  - [Orden de Creación de los Registros](#orden-de-creación-de-los-registros)
+
+
 ## Modelo `Patrocinador`
 Representa a los patrocinadores que financian a los equipos.
 
@@ -44,7 +61,6 @@ Representa a un jugador de fútbol.
 - **Atributos**:
   - `nombre` (CharField): Nombre del jugador.
   - `edad` (IntegerField): Edad del jugador.
-  - `portero` (BooleanField): Boolean es true si es portero, default false
   - `habilidades` (JSONField): Habilidades del jugador.
   - `moral` (IntegerField): Moral del jugador.
   - `salario` (DecimalField): Salario del jugador.
