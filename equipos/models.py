@@ -13,7 +13,7 @@ class Patrocinador(models.Model):
 class Equipo(models.Model):
     nombre = models.CharField(max_length=255)
     fundacion = models.DateField()
-    presupuesto = models.DecimalField(max_digits=15, decimal_places=2)
+    presupuesto = models.IntegerField(default = 0 )
     nacionalidad = models.ForeignKey(Nacionalidad, on_delete=models.SET_NULL, null=True, related_name="equipos")
     patrocinador = models.ForeignKey(Patrocinador, on_delete=models.SET_NULL, null=True, related_name="equipos")
     competencias = models.ManyToManyField(Competencia)
@@ -42,7 +42,7 @@ class Jugador(models.Model):
     habilidades = models.JSONField()
     moral = models.IntegerField(default = 5) # Escala de 0-10
     forma_fisica = models.IntegerField(default = 5) # Escala de 0-10    
-    salario = models.DecimalField(max_digits=15, decimal_places=2)
+    salario = models.IntegerField(default = 60000)
     lesion = models.BooleanField(default=False)
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name="jugadores")
     nacionalidad = models.ForeignKey(Nacionalidad, on_delete=models.SET_NULL, null=True, related_name="jugadores")
