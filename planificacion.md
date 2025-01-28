@@ -103,9 +103,9 @@ La simulación de partidos será el siguiente gran paso después de tener los mo
 
 #### **Acciones**:
 1. **Definir las habilidades clave**:
-   - **Fuerza ofensiva** (remate, desmarques).
-   - **Fuerza defensiva** (defensa, mental).
-   - **Fuerza de mediocampo** (pases, jugadas).
+   - **Fuerza ofensiva** (remate, desmarques(40% mas debil)).
+   - **Fuerza defensiva** (defensa, mental(40% mas debil)).
+   - **Fuerza de mediocampo** (jugadas, pases)(40% mas debil).
    - **Porteros**: Implementar un cálculo especial para los porteros que les dé un peso mayor en el resultado.
 
 2. **Crear la lógica básica de partidos**:
