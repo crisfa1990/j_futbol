@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'competiciones',
     'equipos',
     'selecciones',
+    'simulacion',
     'users',
     
 ]
