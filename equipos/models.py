@@ -145,3 +145,50 @@ class EstadisticaPorTemporada(models.Model):
 
     def __str__(self):
         return f"{self.jugador.nombre} - {self.temporada.anio}"
+
+class Estrategia(models.Model):
+    ESTILOS_PASES = [('C', 'Cortos'), ('L', 'Largos'), ('M', 'Mixtos')]
+    ACTITUD = [('A', 'Ataque'), ('D', 'Defensa'), ('E', 'Equilibrado'), ('L', 'Lateral')]
+    ENTRADAS = [('F', 'Fuertes'), ('N', 'Normal'), ('S', 'Suaves')]
+    MARCAJE = [('F', 'Férreo'), ('N', 'Normal'), ('Z', 'A zona')]
+    PRESION = [('B', 'Baja'), ('M', 'Media'), ('A', 'Alta')]
+    
+    estilo_pases = models.CharField(max_length=1, choices=ESTILOS_PASES, default='M')
+    actitud = models.CharField(max_length=1, choices=ACTITUD, default='E')
+    entradas = models.CharField(max_length=1, choices=ENTRADAS, default='N')
+    marcaje = models.CharField(max_length=1, choices=MARCAJE, default='N')
+    presion = models.CharField(max_length=1, choices=PRESION, default='M')
+    equipo = models.ForeignKey('Equipo', on_delete=models.CASCADE, related_name='alineaciones')
+
+    def __str__(self):
+        return f"Pases: {self.estilo_pases}, Actitud: {self.actitud}, Entradas: {self.entradas}, Marcaje: {self.marcaje}, Presión: {self.presion}" 
+
+class Alineacion(models.Model):
+    nombre = models.CharField(max_length=100)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    equipo = models.ForeignKey('Equipo', on_delete=models.CASCADE, related_name='alineaciones')
+    partido = models.ForeignKey('Partido', on_delete=models.CASCADE, related_name='alineaciones')
+    titulares = models.JSONField(default=list)  # Almacena una lista de IDs de jugadores
+    suplentes = models.JSONField(default=list)  # Almacena una lista de IDs de jugadores
+    estrategia = models.OneToOneField(Estrategia, on_delete=models.SET_NULL, null=True, blank=True)
+
+    @staticmethod
+    def get_or_create_alineacion(equipo, partido):
+        alineacion, created = Alineacion.objects.get_or_create(equipo=equipo, partido=partido, defaults={
+            'nombre': f'Alineación {equipo.nombre} vs {partido.equipo_visitante if equipo == partido.equipo_local else partido.equipo_local}',
+            'titulares': [],
+            'suplentes': [],
+            'estrategia': None
+        })
+        return alineacion, created
+
+    def actualizar_alineacion(self, titulares, suplentes, estrategia):
+        self.titulares = titulares
+        self.suplentes = suplentes
+        self.estrategia = estrategia
+        self.save()
+
+    def __str__(self):
+        return f"Alineación {self.nombre} ({self.equipo}) para {self.partido}"
+
