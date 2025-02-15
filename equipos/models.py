@@ -146,7 +146,8 @@ class EstadisticaPorTemporada(models.Model):
     def __str__(self):
         return f"{self.jugador.nombre} - {self.temporada.anio}"
 
-class Estrategia(models.Model):
+class Alineacion(models.Model):
+
     ESTILOS_PASES = [('C', 'Cortos'), ('L', 'Largos'), ('M', 'Mixtos')]
     ACTITUD = [('A', 'Ataque'), ('D', 'Defensa'), ('E', 'Equilibrado'), ('L', 'Lateral')]
     ENTRADAS = [('F', 'Fuertes'), ('N', 'Normal'), ('S', 'Suaves')]
@@ -158,12 +159,6 @@ class Estrategia(models.Model):
     entradas = models.CharField(max_length=1, choices=ENTRADAS, default='N')
     marcaje = models.CharField(max_length=1, choices=MARCAJE, default='N')
     presion = models.CharField(max_length=1, choices=PRESION, default='M')
-    equipo = models.ForeignKey('Equipo', on_delete=models.CASCADE, related_name='alineaciones')
-
-    def __str__(self):
-        return f"Pases: {self.estilo_pases}, Actitud: {self.actitud}, Entradas: {self.entradas}, Marcaje: {self.marcaje}, Presión: {self.presion}" 
-
-class Alineacion(models.Model):
     nombre = models.CharField(max_length=100)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -171,7 +166,6 @@ class Alineacion(models.Model):
     partido = models.ForeignKey('Partido', on_delete=models.CASCADE, related_name='alineaciones')
     titulares = models.JSONField(default=list)  # Almacena una lista de IDs de jugadores
     suplentes = models.JSONField(default=list)  # Almacena una lista de IDs de jugadores
-    estrategia = models.OneToOneField(Estrategia, on_delete=models.SET_NULL, null=True, blank=True)
 
     @staticmethod
     def get_or_create_alineacion(equipo, partido):
