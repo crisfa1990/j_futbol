@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import *
+from .forms import AlineacionForm
 
 # JUGADORES
 def jugadores_list(request):
@@ -119,3 +120,27 @@ def registrar_resultado(request, pk):
         return redirect('partido_detail', pk=partido.pk)
 
     return render(request, 'equipos/registrar_resultado.html', {'partido': partido})
+
+def crear_alineacion(request):
+    suplentes = [1, 2, 3, 4, 5, 6]
+    if request.method == 'POST':
+        form = AlineacionForm(request.POST)
+        if form.is_valid():
+            alineacion = form.save(commit=False)
+            titulares = {}
+            suplentes_dict = {}
+            for pos_code, pos_name in Alineacion.POSICIONES:
+                jugador_id = form.cleaned_data.get(f'titular_{pos_code}')
+                if jugador_id:
+                    titulares[pos_code] = jugador_id
+            for i in suplentes:
+                jugador_id = form.cleaned_data.get(f'suplente_S{i}')
+                if jugador_id:
+                    suplentes_dict[f'S{i}'] = jugador_id
+            alineacion.titulares = titulares
+            alineacion.suplentes = suplentes_dict
+            alineacion.save()
+            return redirect('alineacion_lista')  # Redirige a una lista de alineaciones o a otra vista
+    else:
+        form = AlineacionForm()
+    return render(request, 'equipos/crear_alineacion.html', {'form': form, 'suplentes': suplentes})

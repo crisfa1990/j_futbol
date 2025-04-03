@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Alineación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Crear Nueva Alineación</h2>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                {# Campos básicos #}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Información General</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for field in form %}
+                            {% if field.name in 'nombre,equipo,partido,estilo_pases,actitud,entradas,marcaje,presion' %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="alert alert-danger">
+                                            {{ field.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                {# Titulares #}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Titulares</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for pos_code, pos_name in form.instance.POSICIONES %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ pos_name }}</label>
+                                {{ form|get_field:'titular_'|add:pos_code }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Suplentes #}
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Suplentes</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for i in "123456" %}
+                            <div class="mb-3">
+                                <label class="form-label">Suplente {{ i }}</label>
+                                {{ form|get_field:'suplente_'|add:i }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Guardar Alineación</button>
+            <a href="{% url 'alineaciones_list' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,27 +1,35 @@
-## 2.1 Simulacion
+## 2.1 Alineacion
 
 **Objetivo:** Crear un formulario en Django que permita a los usuarios crear formaciones de fútbol del equipo de futbol para un partido en particular, se deben incluir 11 titulares y 6 sustitutos.
 
 ### **Restricciones:**
 
 * **Jugadores por posición:**
-    * **Portero:** Mínimo 1, máximo 1.
-    * **Defensa central:** Mínimo 1,máximo 3.
-    * **Defensas (total):** Mínimo 2.
-    * **Mediocampista defensivo (MCD):** Mínimo 0, máximo 2.
-    * **Mediocampista central (MC):** Mínimo 0. máximo 3.
-    * **Mediocampista ofensivo (MCO):** Mínimo 0, máximo 2.
-    * **Mediocampista derecho (MD):** Mínimo 0, máximo 1.
-    * **Mediocampista izquierdo (ML):** Mínimo 0, máximo 1.
-    * **Mediocampistas (total):** Mínimo 3.
-    * **Extremo derecho:** Mínimo 0, máximo 1.
-    * **Extremo izquierdo:** Mínimo 0, máximo 1.
-    * **Delantero centro:** Mínimo 0, máximo 3.
+    * **POR:** Mínimo 1, máximo 1.
+    * **DFC:** Mínimo 1,máximo 3.
+    * **DFD:** Mínimo 0,máximo 1. 
+    * **DFL:** Mínimo 0,máximo 1. 
+  
+    * **Mediocampista defensivo (MCD):** Mínimo 0, máximo 3.
+  
+    * **Mediocampista central (MEC):** Mínimo 0. máximo 3.
+    * **Mediocampista derecho (MED):** Mínimo 0, máximo 1.
+    * **Mediocampista izquierdo (MEI):** Mínimo 0, máximo 1.
 
+    * **Mediocampista ofensivo (MPC):** Mínimo 0, máximo 3.
+    * **Extremo derecho (MPD):** Mínimo 0, máximo 3.
+    * **Extremo izquierdo (MPI):** Mínimo 0, máximo 3.
+
+    * **Delantero centro(DLC):** Mínimo 0, máximo .
+    * **Delantero centro derecho(DLD):** Mínimo 0, máximo 1.
+    * **Delantero centro izquierdo(DLI):** Mínimo 0, máximo 1.
+    
 * **Jugadores por línea:**
-    * **Defensa(DFC, LD y LI):** MMáximo 5.
-    * **Mediocampo(MCD, MC, MCO, MD, MI):** Máximo 6.
-    * **Delantera(DC, ED, EI):** Máximo 4.
+    * **Defensa(DFC, DFD y DFI):** MMáximo 5.
+    * **Mediocentro(MCD):** Máximo 3.
+    * **Mediocampo(MEC, MED, MEI):** Máximo 5.
+    * **Mediapunta(MPC, MPD, MPI):** Máximo 5
+    * **Delantera(DLC, DLD, DLI):** Máximo 3.
 
 ### **Estrategia equipo:**
 
@@ -44,7 +52,6 @@
     * Baja
     * Media
     * Alta
-
 
 
 ### Implementacion en Django

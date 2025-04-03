@@ -39,10 +39,18 @@ class Jugador(models.Model):
     nombre = models.CharField(max_length=255)
     edad = models.IntegerField()
     portero = models.BooleanField(default=False)
-    habilidades = models.JSONField()
-    moral = models.IntegerField(default = 5) # Escala de 0-10
-    forma_fisica = models.IntegerField(default = 5) # Escala de 0-10    
-    salario = models.IntegerField(default = 60000)
+    defensa = models.IntegerField(default=0)
+    pases = models.IntegerField(default=0)
+    remate = models.IntegerField(default=0,)
+    lateral = models.IntegerField(default=0)
+    mentalidad = models.IntegerField(default=0)
+    vision = models.IntegerField(default=0)
+    desmarques = models.IntegerField(default=0)
+    atajadas = models.IntegerField(default=0)  # Solo para porteros
+    distribucion = models.IntegerField(default=0)  # Solo para porteros
+    moral = models.IntegerField(default=5)  # Escala de 0-10
+    forma_fisica = models.IntegerField(default=5)  # Escala de 0-10    
+    salario = models.IntegerField(default=60000)
     lesion = models.BooleanField(default=False)
     equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name="jugadores")
     nacionalidad = models.ForeignKey(Nacionalidad, on_delete=models.SET_NULL, null=True, related_name="jugadores")
@@ -103,10 +111,6 @@ class Partido(models.Model):
     estadio = models.ForeignKey(Estadio, on_delete=models.SET_NULL, null=True, related_name="partidos")
     goles_local = models.IntegerField(default=0)
     goles_visitante = models.IntegerField(default=0)
-    goles_jugadores_local = models.JSONField(default=dict)  # {jugador_id: goles}
-    goles_jugadores_visitante = models.JSONField(default=dict)  # {jugador_id: goles}
-    asistencias_jugadores_local = models.JSONField(default=dict)  # {jugador_id: asistencias}
-    asistencias_jugadores_visitante = models.JSONField(default=dict)  # {jugador_id: asistencias}
     espectadores = models.IntegerField(default=0)  # Total de personas que vieron el partido
     CLIMA_OPCIONES = [
         ('Despejado', 'Despejado'),
@@ -118,7 +122,53 @@ class Partido(models.Model):
 
     def __str__(self):
         return f"{self.equipo_local.nombre} vs {self.equipo_visitante.nombre} - {self.competencia.nombre}"
-    
+    # ... (después de la clase Partido)
+
+class GolPartido(models.Model):
+    partido = models.ForeignKey(Partido, on_delete=models.CASCADE, related_name='goles')
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name='goles')
+    minuto = models.IntegerField()
+    es_local = models.BooleanField()  # True si el jugador es del equipo local
+    tipo = models.CharField(max_length=20, choices=[
+        ('Normal', 'Normal'),
+        ('Penal', 'Penal'),
+        ('Falta', 'Falta'),
+        ('Autogol', 'Autogol')
+    ], default='Normal')
+
+    class Meta:
+        ordering = ['minuto']
+
+    def __str__(self):
+        return f"Gol de {self.jugador.nombre} - {self.partido}"
+
+class AsistenciaPartido(models.Model):
+    partido = models.ForeignKey(Partido, on_delete=models.CASCADE, related_name='asistencias')
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name='asistencias')
+    gol = models.OneToOneField(GolPartido, on_delete=models.CASCADE, related_name='asistencia')
+    es_local = models.BooleanField()  # True si el jugador es del equipo local
+
+    def __str__(self):
+        return f"Asistencia de {self.jugador.nombre} - {self.partido}"
+
+class Tarjeta(models.Model):
+    partido = models.ForeignKey(Partido, on_delete=models.CASCADE, related_name='tarjetas')
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name='tarjetas')
+    minuto = models.IntegerField()
+    es_local = models.BooleanField()  # True si la tarjeta es del equipo local
+    es_amarilla = models.BooleanField()  # True si es amarilla, False si es roja
+    tipo = models.CharField(max_length=20, choices=[
+        ('Amarilla', 'Amarilla'),
+        ('Roja', 'Roja')
+    ], default='Amarilla')
+
+    class Meta:
+        ordering = ['minuto']
+
+    def __str__(self):
+        return f"{self.tipo} de {self.jugador.nombre} - {self.partido}"
+
+# Modelo para la tabla de transferencias
 class Transferencia(models.Model):
     jugador = models.ForeignKey('Jugador', on_delete=models.CASCADE, related_name='transferencias')
     equipo_anterior = models.ForeignKey('Equipo', on_delete=models.SET_NULL, null=True, related_name='salidas')
@@ -136,6 +186,12 @@ class EstadisticaPorTemporada(models.Model):
     goles = models.IntegerField(default=0)
     asistencias = models.IntegerField(default=0)
     partidos = models.IntegerField(default=0)
+    minutos_jugados = models.IntegerField(default=0)
+    tarjetas_amarillas = models.IntegerField(default=0)
+    tarjetas_rojas = models.IntegerField(default=0)
+    goles_encajados = models.IntegerField(default=0) # Solo para porteros
+    goles_de_falta = models.IntegerField(default=0)
+    goles_de_penal = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ("jugador", "temporada", "equipo")
@@ -153,6 +209,7 @@ class Alineacion(models.Model):
     ENTRADAS = [('F', 'Fuertes'), ('N', 'Normal'), ('S', 'Suaves')]
     MARCAJE = [('F', 'Férreo'), ('N', 'Normal'), ('Z', 'A zona')]
     PRESION = [('B', 'Baja'), ('M', 'Media'), ('A', 'Alta')]
+    POSICIONES = [('POR', 'Portero'), ('DFC', 'Defensa Central'), ('DFD', 'Defensa Derecho'), ('DFI', 'Defensa Izquierdo'), ('MCD', 'Mediocentro defensivo'), ('MED', 'Mediocampista Derecho'), ('MEI', 'Mediocampista Izquierdo'), ('MEC', 'Mediocampista central'), ('MPC', 'Mediapunta Centro'), ('MPD', 'Mediapunta Derecho'), ('MPI', 'Mediapunta Izquierdo'), ('DLC', 'Delantero Centro'), ('DLD', 'Delantero Derecho'), ('DLI', 'Delantero Izquierdo')]
     
     estilo_pases = models.CharField(max_length=1, choices=ESTILOS_PASES, default='M')
     actitud = models.CharField(max_length=1, choices=ACTITUD, default='E')
@@ -164,25 +221,86 @@ class Alineacion(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     equipo = models.ForeignKey('Equipo', on_delete=models.CASCADE, related_name='alineaciones')
     partido = models.ForeignKey('Partido', on_delete=models.CASCADE, related_name='alineaciones')
-    titulares = models.JSONField(default=list)  # Almacena una lista de IDs de jugadores
-    suplentes = models.JSONField(default=list)  # Almacena una lista de IDs de jugadores
+
 
     @staticmethod
     def get_or_create_alineacion(equipo, partido):
-        alineacion, created = Alineacion.objects.get_or_create(equipo=equipo, partido=partido, defaults={
-            'nombre': f'Alineación {equipo.nombre} vs {partido.equipo_visitante if equipo == partido.equipo_local else partido.equipo_local}',
-            'titulares': [],
-            'suplentes': [],
-            'estrategia': None
-        })
+        alineacion, created = Alineacion.objects.get_or_create(
+            equipo=equipo, 
+            partido=partido, 
+            defaults={
+                'nombre': f'Alineación {equipo.nombre} vs {partido.equipo_visitante.nombre if equipo == partido.equipo_local else partido.equipo_local.nombre}'
+            }
+        )
         return alineacion, created
 
-    def actualizar_alineacion(self, titulares, suplentes, estrategia):
-        self.titulares = titulares
-        self.suplentes = suplentes
-        self.estrategia = estrategia
-        self.save()
+    def validar_titulares(self, titulares_dict):
+        if len(titulares_dict) != 11:
+            raise ValueError("Debe haber exactamente 11 jugadores titulares")
+        return True
+
+    def actualizar_alineacion(self, titulares_dict, suplentes_list):
+        # Validar número de titulares
+        self.validar_titulares(titulares_dict)
+        
+        # Eliminar alineaciones existentes
+        self.jugadores_alineacion.all().delete()
+        
+        # Crear nuevos registros para titulares
+        for posicion, jugador_id in titulares_dict.items():
+            JugadorAlineacion.objects.create(
+                alineacion=self,
+                jugador_id=jugador_id,
+                posicion=posicion,
+                es_titular=True
+            )
+        
+        # Crear nuevos registros para suplentes
+        for idx, jugador_id in enumerate(suplentes_list, 1):
+            JugadorAlineacion.objects.create(
+                alineacion=self,
+                jugador_id=jugador_id,
+                posicion='SUP',  # Suplente
+                es_titular=False,
+                numero_suplente=idx
+            )
 
     def __str__(self):
-        return f"Alineación {self.nombre} ({self.equipo}) para {self.partido}"
+        return f"Alineación {self.nombre} ({self.equipo.nombre}) para {self.partido}"
+
+
+class JugadorAlineacion(models.Model):
+    alineacion = models.ForeignKey(Alineacion, on_delete=models.CASCADE, related_name='jugadores_alineacion')
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE, related_name='alineaciones')
+    posicion = models.CharField(max_length=3, choices=Alineacion.POSICIONES)
+    es_titular = models.BooleanField(default=True)
+    numero_suplente = models.IntegerField(null=True, blank=True)  # Para suplentes (S1, S2, etc.)
+
+    def save(self, *args, **kwargs):
+        if self.es_titular:
+            # Contar titulares actuales en esta alineación
+            titulares_count = JugadorAlineacion.objects.filter(
+                alineacion=self.alineacion,
+                es_titular=True
+            ).exclude(pk=self.pk).count()
+            
+            if titulares_count >= 11:
+                raise ValueError("No pueden haber más de 11 jugadores titulares en una alineación")
+        
+        super().save(*args, **kwargs)
+
+    class Meta:
+        unique_together = ('alineacion', 'jugador')
+        ordering = ['numero_suplente']
+        # Agregar constraints
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(es_titular=False) | models.Q(numero_suplente__isnull=True),
+                name='titular_no_numero_suplente'
+            )
+        ]
+
+    def __str__(self):
+        tipo = "Titular" if self.es_titular else f"Suplente {self.numero_suplente}"
+        return f"{self.jugador.nombre} - {self.posicion} ({tipo})"
 

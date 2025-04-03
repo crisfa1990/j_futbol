@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load custom_filters %}   <!-- Load custom filters -->
+    <meta charset="UTF-8">
+    <title>Crear Alineación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Crear Alineación</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                {{ form.nombre }}
+            </div>
+            <div class="mb-3">
+                <label for="equipo" class="form-label">Equipo</label>
+                {{ form.equipo }}
+            </div>
+            <div class="mb-3">
+                <label for="partido" class="form-label">Partido</label>
+                {{ form.partido }}
+            </div>
+            <div class="mb-3">
+                <label for="estilo_pases" class="form-label">Estilo de Pases</label>
+                {{ form.estilo_pases }}
+            </div>
+            <div class="mb-3">
+                <label for="actitud" class="form-label">Actitud</label>
+                {{ form.actitud }}
+            </div>
+            <div class="mb-3">
+                <label for="entradas" class="form-label">Entradas</label>
+                {{ form.entradas }}
+            </div>
+            <div class="mb-3">
+                <label for="marcaje" class="form-label">Marcaje</label>
+                {{ form.marcaje }}
+            </div>
+            <div class="mb-3">
+                <label for="presion" class="form-label">Presión</label>
+                {{ form.presion }}
+            </div>
+            <h3>Seleccionar Titulares</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Posición</h4>
+                    {% for pos_code, pos_name in form.instance.POSICIONES %}
+                        <div class="mb-3">
+                            {% with field=form|get_field:"titular_"|add:pos_code %}
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ pos_name }}</label>
+                                {{ field }}
+                            {% endwith %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-6">
+                    <h4>Jugador</h4>
+                    {% for pos_code, pos_name in form.instance.POSICIONES %}
+                        <div class="mb-3">
+                            {% with field=form|get_field:"titular_"|add:pos_code %}
+                                {{ field }}
+                            {% endwith %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <h3>Seleccionar Suplentes</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Posición</h4>
+                    {% for i in suplentes %}
+                        <div class="mb-3">
+                            {% with field=form|get_field:"suplente_S"|add:i|stringformat:"s" %}
+                                <label for="{{ field.id_for_label }}" class="form-label">Suplente S{{ i }}</label>
+                                {{ field }}
+                            {% endwith %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-md-6">
+                    <h4>Jugador</h4>
+                    {% for i in suplentes %}
+                        <div class="mb-3">
+                            {% with field=form|get_field:"suplente_S"|add:i|stringformat:"s" %}
+                                {{ field }}
+                            {% endwith %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-secondary">Cancelar</button>
+        </form>
+    </div>
+</body>
+</html>

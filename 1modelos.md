@@ -13,9 +13,9 @@
   - [Modelo `Partido`](#modelo-partido)
   - [Modelo `EstadisticaPorTemporada`](#modelo-estadisticaportemporada)
   - [Modelo `Competencia`](#modelo-competencia)
+  - [Modelo `Alineacion`](#modelo-alineacion)
   - [Relaciones entre los Modelos](#relaciones-entre-los-modelos)
   - [Orden de Creación de los Registros](#orden-de-creación-de-los-registros)
-
 
 ## Modelo `Patrocinador`
 Representa a los patrocinadores que financian a los equipos.
@@ -43,7 +43,7 @@ Representa a un equipo de fútbol.
 - **Atributos**:
   - `nombre` (CharField): Nombre del equipo.
   - `fundacion` (DateField): Fecha de fundación del equipo.
-  - `presupuesto` (DecimalField): Presupuesto del equipo.
+  - `presupuesto` (IntegerField): Presupuesto del equipo.
   - `nacionalidad` (ForeignKey): Relación con el modelo `Nacionalidad`.
   - `patrocinador` (ForeignKey): Relación con el modelo `Patrocinador`.
   - `competencias` (ManyToManyField): Relación con el modelo `Competencia`.
@@ -61,15 +61,20 @@ Representa a un jugador de fútbol.
 - **Atributos**:
   - `nombre` (CharField): Nombre del jugador.
   - `edad` (IntegerField): Edad del jugador.
+  - `portero` (BooleanField): Indica si el jugador es portero.
   - `habilidades` (JSONField): Habilidades del jugador.
   - `moral` (IntegerField): Moral del jugador.
-  - `salario` (DecimalField): Salario del jugador.
+  - `forma_fisica` (IntegerField): Forma física del jugador.
+  - `salario` (IntegerField): Salario del jugador.
   - `lesion` (BooleanField): Indica si el jugador está lesionado.
   - `equipo` (ForeignKey): Relación con el modelo `Equipo`.
   - `nacionalidad` (ForeignKey): Relación con el modelo `Nacionalidad`.
   - `goles_carrera` (IntegerField): Goles en la carrera del jugador.
   - `asistencias_carrera` (IntegerField): Asistencias en la carrera del jugador.
   - `partidos_carrera` (IntegerField): Partidos jugados en la carrera del jugador.
+  - `partidos_internacionales` (IntegerField): Partidos internacionales jugados.
+  - `goles_internacionales` (IntegerField): Goles internacionales marcados.
+  - `asistencias_internacionales` (IntegerField): Asistencias internacionales realizadas.
 
 - **Métodos**:
   - `__str__`: Devuelve el nombre del jugador.
@@ -171,6 +176,28 @@ Representa una competencia de fútbol.
   - `esta_disponible`: Verifica si la competencia está disponible en una fecha específica.
   - `calcular_inversion_total`: Calcula la inversión total en la competencia.
 
+## Modelo `Alineacion`
+Representa una alineación de un equipo para un partido específico.
+
+- **Atributos**:
+  - `nombre` (CharField): Nombre de la alineación.
+  - `fecha_creacion` (DateTimeField): Fecha de creación de la alineación.
+  - `fecha_actualizacion` (DateTimeField): Fecha de última actualización de la alineación.
+  - `equipo` (ForeignKey): Relación con el modelo `Equipo`.
+  - `partido` (ForeignKey): Relación con el modelo `Partido`.
+  - `titulares` (JSONField): Lista de IDs de jugadores titulares.
+  - `suplentes` (JSONField): Lista de IDs de jugadores suplentes.
+  - `estilo_pases` (CharField): Estilo de pases del equipo.
+  - `actitud` (CharField): Actitud del equipo.
+  - `entradas` (CharField): Tipo de entradas del equipo.
+  - `marcaje` (CharField): Tipo de marcaje del equipo.
+  - `presion` (CharField): Tipo de presión del equipo.
+
+- **Métodos**:
+  - `__str__`: Devuelve el nombre de la alineación.
+  - `get_or_create_alineacion`: Obtiene o crea una alineación para un equipo y partido específicos.
+  - `actualizar_alineacion`: Actualiza la alineación con nuevos titulares y suplentes.
+
 ## Relaciones entre los Modelos
 - **Patrocinador** y **Equipo**: Relación de uno a muchos. Un patrocinador puede financiar varios equipos.
 - **Nacionalidad** y **Equipo**: Relación de uno a muchos. Una nacionalidad puede tener varios equipos.
@@ -200,3 +227,4 @@ Representa una competencia de fútbol.
 9. Crear registros de `Partido` vinculados a `Equipo`, `Competencia`, `Temporada` y `Estadio`.
 10. Crear registros de `Lesion` vinculados a `Jugador`.
 11. Crear registros de `EstadisticaPorTemporada` vinculados a `Jugador`, `Temporada` y `Equipo`.
+12. Crear registros de `Alineacion` vinculados a `Equipo` y `Partido`.
