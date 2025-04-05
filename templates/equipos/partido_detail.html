@@ -85,4 +85,12 @@
         </div>
     </div>
 </div>
+<div class="mt-3">
+    <a href="{% url 'crear_alineacion_preseleccionada' equipo_id=partido.equipo_local.id partido_id=partido.id %}" class="btn btn-primary">
+        Crear Alineación para {{ partido.equipo_local.nombre }}
+    </a>
+    <a href="{% url 'crear_alineacion_preseleccionada' equipo_id=partido.equipo_visitante.id partido_id=partido.id %}" class="btn btn-primary">
+        Crear Alineación para {{ partido.equipo_visitante.nombre }}
+    </a>
+</div>
 {% endblock %}

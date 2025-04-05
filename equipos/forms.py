@@ -4,40 +4,37 @@ from .models import Alineacion, Jugador, JugadorAlineacion
 class AlineacionForm(forms.ModelForm):
     class Meta:
         model = Alineacion
-        fields = [
-            'nombre', 'equipo', 'partido', 'estilo_pases', 
-            'actitud', 'entradas', 'marcaje', 'presion'
-        ]
-        widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'equipo': forms.Select(attrs={'class': 'form-control'}),
-            'partido': forms.Select(attrs={'class': 'form-control'}),
-            'estilo_pases': forms.Select(attrs={'class': 'form-control'}),
-            'actitud': forms.Select(attrs={'class': 'form-control'}),
-            'entradas': forms.Select(attrs={'class': 'form-control'}),
-            'marcaje': forms.Select(attrs={'class': 'form-control'}),
-            'presion': forms.Select(attrs={'class': 'form-control'})
-        }
+        fields = ['nombre', 'equipo', 'partido', 'estilo_pases', 'actitud', 'entradas', 'marcaje', 'presion']
 
     def __init__(self, *args, **kwargs):
+        equipo = kwargs.pop('equipo', None)
         super().__init__(*args, **kwargs)
-        if self.instance and self.instance.equipo:
-            jugadores = Jugador.objects.filter(equipo=self.instance.equipo)
-            for pos_code, pos_name in Alineacion.POSICIONES:
-                self.fields[f'titular_{pos_code}'] = forms.ModelChoiceField(
-                    queryset=jugadores,
-                    required=False,
-                    label=pos_name,
-                    widget=forms.Select(attrs={'class': 'form-control'})
-                )
+        
+        # Initialize fields for all positions
+        for pos_code, pos_name in Alineacion.POSICIONES:
+            self.fields[f'titular_{pos_code}'] = forms.ModelChoiceField(
+                queryset=Jugador.objects.none(),
+                required=False,
+                label=f"{pos_name}",
+                widget=forms.Select(attrs={'class': 'form-control'})
+            )
 
-            for i in range(1, 7):
-                self.fields[f'suplente_{i}'] = forms.ModelChoiceField(
-                    queryset=jugadores,
-                    required=False,
-                    label=f'Suplente {i}',
-                    widget=forms.Select(attrs={'class': 'form-control'})
-                )
+        # Initialize fields for substitutes
+        for i in range(1, 7):
+            self.fields[f'suplente_{i}'] = forms.ModelChoiceField(
+                queryset=Jugador.objects.none(),
+                required=False,
+                label=f'Suplente {i}',
+                widget=forms.Select(attrs={'class': 'form-control'})
+            )
+
+        # Update querysets if we have an equipo
+        if equipo:
+            jugadores = Jugador.objects.filter(equipo=equipo)
+            # Update querysets for all player fields
+            for field_name in self.fields:
+                if field_name.startswith('titular_') or field_name.startswith('suplente_'):
+                    self.fields[field_name].queryset = jugadores
 
     def clean(self):
         cleaned_data = super().clean()

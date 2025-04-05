@@ -1,4 +1,20 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block extra_css %}
+<style>
+    .jugador-select {
+        margin-bottom: 1rem;
+    }
+    .posicion-grupo {
+        border: 1px solid #dee2e6;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock %}
 
 {% block title %}Crear Alineación{% endblock %}
 
@@ -71,4 +87,8 @@
         </div>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'equipos/js/alineacion.js' %}"></script>
 {% endblock %}

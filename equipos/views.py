@@ -1,6 +1,12 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import *
 from .forms import AlineacionForm
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Alineacion, JugadorAlineacion
+from .forms import AlineacionForm
 
 # JUGADORES
 def jugadores_list(request):
@@ -122,25 +128,192 @@ def registrar_resultado(request, pk):
     return render(request, 'equipos/registrar_resultado.html', {'partido': partido})
 
 def crear_alineacion(request):
-    suplentes = [1, 2, 3, 4, 5, 6]
     if request.method == 'POST':
         form = AlineacionForm(request.POST)
         if form.is_valid():
-            alineacion = form.save(commit=False)
-            titulares = {}
-            suplentes_dict = {}
-            for pos_code, pos_name in Alineacion.POSICIONES:
-                jugador_id = form.cleaned_data.get(f'titular_{pos_code}')
-                if jugador_id:
-                    titulares[pos_code] = jugador_id
-            for i in suplentes:
-                jugador_id = form.cleaned_data.get(f'suplente_S{i}')
-                if jugador_id:
-                    suplentes_dict[f'S{i}'] = jugador_id
-            alineacion.titulares = titulares
-            alineacion.suplentes = suplentes_dict
-            alineacion.save()
-            return redirect('alineacion_lista')  # Redirige a una lista de alineaciones o a otra vista
+            try:
+                alineacion = form.save()
+                
+                # Procesar titulares
+                for pos_code, _ in Alineacion.POSICIONES:
+                    jugador = form.cleaned_data.get(f'titular_{pos_code}')
+                    if jugador:
+                        JugadorAlineacion.objects.create(
+                            alineacion=alineacion,
+                            jugador=jugador,
+                            posicion=pos_code,
+                            es_titular=True
+                        )
+                
+                # Procesar suplentes
+                for i in range(1, 7):
+                    jugador = form.cleaned_data.get(f'suplente_{i}')
+                    if jugador:
+                        JugadorAlineacion.objects.create(
+                            alineacion=alineacion,
+                            jugador=jugador,
+                            posicion='SUP',
+                            es_titular=False,
+                            numero_suplente=i
+                        )
+                
+                messages.success(request, 'Alineación creada exitosamente.')
+                return redirect('alineacion_detail', pk=alineacion.pk)
+            
+            except ValueError as e:
+                messages.error(request, str(e))
     else:
         form = AlineacionForm()
-    return render(request, 'equipos/crear_alineacion.html', {'form': form, 'suplentes': suplentes})
+    
+    return render(request, 'equipos/alineacion_create.html', {'form': form})
+
+def editar_alineacion(request, pk):
+    alineacion = get_object_or_404(Alineacion, pk=pk)
+    
+    if request.method == 'POST':
+        form = AlineacionForm(request.POST, instance=alineacion)
+        if form.is_valid():
+            try:
+                # Eliminar jugadores existentes
+                alineacion.jugadores_alineacion.all().delete()
+                
+                # Guardar la alineación actualizada
+                alineacion = form.save()
+                
+                # Procesar titulares
+                for pos_code, _ in Alineacion.POSICIONES:
+                    jugador = form.cleaned_data.get(f'titular_{pos_code}')
+                    if jugador:
+                        JugadorAlineacion.objects.create(
+                            alineacion=alineacion,
+                            jugador=jugador,
+                            posicion=pos_code,
+                            es_titular=True
+                        )
+                
+                # Procesar suplentes
+                for i in range(1, 7):
+                    jugador = form.cleaned_data.get(f'suplente_{i}')
+                    if jugador:
+                        JugadorAlineacion.objects.create(
+                            alineacion=alineacion,
+                            jugador=jugador,
+                            posicion='SUP',
+                            es_titular=False,
+                            numero_suplente=i
+                        )
+                
+                messages.success(request, 'Alineación actualizada exitosamente.')
+                return redirect('alineacion_detail', pk=alineacion.pk)
+            
+            except ValueError as e:
+                messages.error(request, str(e))
+    else:
+        form = AlineacionForm(instance=alineacion)
+        
+        # Cargar jugadores actuales
+        titulares = alineacion.jugadores_alineacion.filter(es_titular=True)
+        for jugador_alineacion in titulares:
+            form.fields[f'titular_{jugador_alineacion.posicion}'].initial = jugador_alineacion.jugador
+        
+        suplentes = alineacion.jugadores_alineacion.filter(es_titular=False).order_by('numero_suplente')
+        for idx, jugador_alineacion in enumerate(suplentes, 1):
+            form.fields[f'suplente_{idx}'].initial = jugador_alineacion.jugador
+    
+    return render(request, 'equipos/alineacion_form.html', {
+        'form': form,
+        'alineacion': alineacion,
+        'is_edit': True
+    })
+
+@require_http_methods(["GET"])
+def get_jugadores_equipo(request, equipo_id):
+    jugadores = Jugador.objects.filter(equipo_id=equipo_id).values('id', 'nombre', 'portero')
+    return JsonResponse(list(jugadores), safe=False)
+
+
+def alineacion_detail(request, pk):
+    alineacion = get_object_or_404(Alineacion, pk=pk)
+    titulares = alineacion.jugadores_alineacion.filter(es_titular=True).order_by('posicion')
+    suplentes = alineacion.jugadores_alineacion.filter(es_titular=False).order_by('numero_suplente')
+    
+    context = {
+        'alineacion': alineacion,
+        'titulares': titulares,
+        'suplentes': suplentes,
+    }
+    return render(request, 'equipos/alineacion_detail.html', context)
+
+
+def crear_alineacion_preseleccionada(request, equipo_id, partido_id):
+    equipo = get_object_or_404(Equipo, pk=equipo_id)
+    partido = get_object_or_404(Partido, pk=partido_id)
+    
+    if request.method == 'POST':
+        form = AlineacionForm(request.POST, equipo=equipo)
+        if form.is_valid():
+            try:
+                # Set equipo and partido before saving
+                alineacion = form.save(commit=False)
+                alineacion.equipo = equipo
+                alineacion.partido = partido
+                alineacion.save()
+                
+                # Process players...
+                for pos_code, _ in Alineacion.POSICIONES:
+                    jugador = form.cleaned_data.get(f'titular_{pos_code}')
+                    if jugador:
+                        JugadorAlineacion.objects.create(
+                            alineacion=alineacion,
+                            jugador=jugador,
+                            posicion=pos_code,
+                            es_titular=True
+                        )
+                
+                # Procesar suplentes
+                for i in range(1, 7):
+                    jugador = form.cleaned_data.get(f'suplente_{i}')
+                    if jugador:
+                        JugadorAlineacion.objects.create(
+                            alineacion=alineacion,
+                            jugador=jugador,
+                            posicion='SUP',
+                            es_titular=False,
+                            numero_suplente=i
+                        )
+                
+                messages.success(request, 'Alineación creada exitosamente.')
+                return redirect('alineacion_detail', pk=alineacion.pk)
+            
+            except ValueError as e:
+                messages.error(request, str(e))
+    else:
+        initial_data = {
+            'equipo': equipo,
+            'partido': partido,
+            'nombre': f'Alineación {equipo.nombre} vs {partido.equipo_visitante.nombre if equipo == partido.equipo_local else partido.equipo_local.nombre}'
+        }
+        form = AlineacionForm(initial=initial_data, equipo=equipo)
+
+    context = {
+        'form': form,
+        'equipo': equipo,
+        'partido': partido
+    }
+    return render(request, 'equipos/crear_alineacion.html', context)
+
+    # Cargar jugadores del equipo seleccionado
+    jugadores = Jugador.objects.filter(equipo=equipo)
+    for field_name, field in form.fields.items():
+        if field_name.startswith('titular_') or field_name.startswith('suplente_'):
+            field.queryset = jugadores
+    
+    # Pasar lista de números para suplentes
+    suplentes = range(1, 7)
+    
+    return render(request, 'equipos/crear_alineacion.html', {
+        'form': form, 
+        'equipo': equipo, 
+        'partido': partido,
+        'suplentes': suplentes
+    })

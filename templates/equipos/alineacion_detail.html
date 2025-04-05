@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de Alineación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ alineacion.nombre }}</h2>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Información General</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Equipo:</strong> {{ alineacion.equipo.nombre }}</p>
+                    <p><strong>Partido:</strong> {{ alineacion.partido }}</p>
+                    <p><strong>Estilo de Pases:</strong> {{ alineacion.get_estilo_pases_display }}</p>
+                    <p><strong>Actitud:</strong> {{ alineacion.get_actitud_display }}</p>
+                    <p><strong>Entradas:</strong> {{ alineacion.get_entradas_display }}</p>
+                    <p><strong>Marcaje:</strong> {{ alineacion.get_marcaje_display }}</p>
+                    <p><strong>Presión:</strong> {{ alineacion.get_presion_display }}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Titulares</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                            {% for jugador in titulares %}
+                                <li class="list-group-item">
+                                    <strong>{{ jugador.get_posicion_display }}:</strong>
+                                    {{ jugador.jugador.nombre }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Suplentes</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                            {% for jugador in suplentes %}
+                                <li class="list-group-item">
+                                    <strong>Suplente {{ jugador.numero_suplente }}:</strong>
+                                    {{ jugador.jugador.nombre }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a href="{% url 'editar_alineacion' alineacion.pk %}" class="btn btn-warning">Editar Alineación</a>
+                <a href="{% url 'crear_alineacion' %}" class="btn btn-primary">Nueva Alineación</a>
+                <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

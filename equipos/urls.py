@@ -14,4 +14,8 @@ urlpatterns = [
     path('partidos/<int:pk>/', views.partido_detail, name='partido_detail'),
     path('partidos/<int:pk>/registrar_resultado/', views.registrar_resultado, name='registrar_resultado'),
     path('alineacion/crear/', views.crear_alineacion, name='crear_alineacion'),
+    path('alineacion/crear/<int:equipo_id>/<int:partido_id>/', views.crear_alineacion_preseleccionada, name='crear_alineacion_preseleccionada'),
+    path('alineacion/<int:pk>/', views.alineacion_detail, name='alineacion_detail'),
+    path('alineacion/<int:pk>/editar/', views.editar_alineacion, name='editar_alineacion'),
+    path('api/equipos/<int:equipo_id>/jugadores/', views.get_jugadores_equipo, name='api_jugadores_equipo'),
 ]

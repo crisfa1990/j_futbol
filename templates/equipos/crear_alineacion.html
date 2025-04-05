@@ -17,11 +17,21 @@
             </div>
             <div class="mb-3">
                 <label for="equipo" class="form-label">Equipo</label>
-                {{ form.equipo }}
+                {% if equipo %}
+                    {{ form.equipo.as_hidden }}
+                    <input type="text" class="form-control" value="{{ equipo.nombre }}" readonly>
+                {% else %}
+                    {{ form.equipo }}
+                {% endif %}
             </div>
             <div class="mb-3">
                 <label for="partido" class="form-label">Partido</label>
-                {{ form.partido }}
+                {% if partido %}
+                    {{ form.partido.as_hidden }}
+                    <input type="text" class="form-control" value="{{ partido.equipo_local.nombre }} vs {{ partido.equipo_visitante.nombre }}" readonly>
+                {% else %}
+                    {{ form.partido }}
+                {% endif %}
             </div>
             <div class="mb-3">
                 <label for="estilo_pases" class="form-label">Estilo de Pases</label>
@@ -45,48 +55,22 @@
             </div>
             <h3>Seleccionar Titulares</h3>
             <div class="row">
-                <div class="col-md-6">
-                    <h4>Posición</h4>
+                <div class="col-md-12">
                     {% for pos_code, pos_name in form.instance.POSICIONES %}
                         <div class="mb-3">
-                            {% with field=form|get_field:"titular_"|add:pos_code %}
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ pos_name }}</label>
-                                {{ field }}
-                            {% endwith %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="col-md-6">
-                    <h4>Jugador</h4>
-                    {% for pos_code, pos_name in form.instance.POSICIONES %}
-                        <div class="mb-3">
-                            {% with field=form|get_field:"titular_"|add:pos_code %}
-                                {{ field }}
-                            {% endwith %}
+                            <label for="id_titular_{{ pos_code }}" class="form-label">{{ pos_name }}</label>
+                            {{ form|get_field:'titular_'|add:pos_code }}
                         </div>
                     {% endfor %}
                 </div>
             </div>
             <h3>Seleccionar Suplentes</h3>
             <div class="row">
-                <div class="col-md-6">
-                    <h4>Posición</h4>
-                    {% for i in suplentes %}
+                <div class="col-md-12">
+                    {% for i in "123456" %}
                         <div class="mb-3">
-                            {% with field=form|get_field:"suplente_S"|add:i|stringformat:"s" %}
-                                <label for="{{ field.id_for_label }}" class="form-label">Suplente S{{ i }}</label>
-                                {{ field }}
-                            {% endwith %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="col-md-6">
-                    <h4>Jugador</h4>
-                    {% for i in suplentes %}
-                        <div class="mb-3">
-                            {% with field=form|get_field:"suplente_S"|add:i|stringformat:"s" %}
-                                {{ field }}
-                            {% endwith %}
+                            <label for="id_suplente_{{ i }}" class="form-label">Suplente {{ i }}</label>
+                            {{ form|get_field:'suplente_'|add:i }}
                         </div>
                     {% endfor %}
                 </div>

@@ -1,90 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Alineación</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>Crear Alineación</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
-                {{ form.nombre }}
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Editar Alineación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Alineación</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                Por favor, corrija los siguientes errores:
+                {{ form.errors }}
             </div>
-            <div class="mb-3">
-                <label for="equipo" class="form-label">Equipo</label>
-                {{ form.equipo }}
-            </div>
-            <div class="mb-3">
-                <label for="partido" class="form-label">Partido</label>
-                {{ form.partido }}
-            </div>
-            <div class="mb-3">
-                <label for="estilo_pases" class="form-label">Estilo de Pases</label>
-                {{ form.estilo_pases }}
-            </div>
-            <div class="mb-3">
-                <label for="actitud" class="form-label">Actitud</label>
-                {{ form.actitud }}
-            </div>
-            <div class="mb-3">
-                <label for="entradas" class="form-label">Entradas</label>
-                {{ form.entradas }}
-            </div>
-            <div class="mb-3">
-                <label for="marcaje" class="form-label">Marcaje</label>
-                {{ form.marcaje }}
-            </div>
-            <div class="mb-3">
-                <label for="presion" class="form-label">Presión</label>
-                {{ form.presion }}
-            </div>
-            <h3>Seleccionar Titulares</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Posición</h4>
-                    {% for pos_code, pos_name in form.instance.POSICIONES %}
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Información General</h4>
+                    </div>
+                    <div class="card-body">
                         <div class="mb-3">
-                            <label for="{{ form.titular_{{ pos_code }}.id_for_label }}" class="form-label">{{ pos_name }}</label>
-                            {{ form.titular_{{ pos_code }} }}
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                            {{ form.nombre }}
                         </div>
-                    {% endfor %}
-                </div>
-                <div class="col-md-6">
-                    <h4>Jugador</h4>
-                    {% for pos_code, pos_name in form.instance.POSICIONES %}
                         <div class="mb-3">
-                            {{ form.titular_{{ pos_code }} }}
+                            <label for="{{ form.estilo_pases.id_for_label }}" class="form-label">Estilo de Pases</label>
+                            {{ form.estilo_pases }}
                         </div>
-                    {% endfor %}
+                        <div class="mb-3">
+                            <label for="{{ form.actitud.id_for_label }}" class="form-label">Actitud</label>
+                            {{ form.actitud }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.entradas.id_for_label }}" class="form-label">Entradas</label>
+                            {{ form.entradas }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.marcaje.id_for_label }}" class="form-label">Marcaje</label>
+                            {{ form.marcaje }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.presion.id_for_label }}" class="form-label">Presión</label>
+                            {{ form.presion }}
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h3>Seleccionar Suplentes</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Posición</h4>
-                    {% for i in range(1, 7) %}
-                        <div class="mb-3">
-                            <label for="{{ form.suplente_S{{ i }}.id_for_label }}" class="form-label">Suplente S{{ i }}</label>
-                            {{ form.suplente_S{{ i }} }}
-                        </div>
-                    {% endfor %}
+
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Titulares</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for pos_code, pos_name in form.instance.POSICIONES %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ pos_name }}</label>
+                                {{ form|get_field:'titular_'|add:pos_code }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h4>Jugador</h4>
-                    {% for i in range(1, 7) %}
-                        <div class="mb-3">
-                            {{ form.suplente_S{{ i }} }}
-                        </div>
-                    {% endfor %}
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Suplentes</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for i in "123456" %}
+                            <div class="mb-3">
+                                <label class="form-label">Suplente {{ i }}</label>
+                                {{ form|get_field:'suplente_'|add:i }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button type="reset" class="btn btn-secondary">Cancelar</button>
-        </form>
-    </div>
-</body>
-</html>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="{% url 'alineacion_detail' alineacion.pk %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'equipos/js/alineacion.js' %}"></script>
+{% endblock %}
