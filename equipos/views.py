@@ -301,19 +301,3 @@ def crear_alineacion_preseleccionada(request, equipo_id, partido_id):
         'partido': partido
     }
     return render(request, 'equipos/crear_alineacion.html', context)
-
-    # Cargar jugadores del equipo seleccionado
-    jugadores = Jugador.objects.filter(equipo=equipo)
-    for field_name, field in form.fields.items():
-        if field_name.startswith('titular_') or field_name.startswith('suplente_'):
-            field.queryset = jugadores
-    
-    # Pasar lista de números para suplentes
-    suplentes = range(1, 7)
-    
-    return render(request, 'equipos/crear_alineacion.html', {
-        'form': form, 
-        'equipo': equipo, 
-        'partido': partido,
-        'suplentes': suplentes
-    })
